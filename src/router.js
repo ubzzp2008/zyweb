@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from './views/Login.vue'
-import Test from './views/Test.vue'
+import Home from './views/Home.vue'
 
 Vue.use(Router)
 
@@ -15,17 +15,6 @@ Router.prototype.push = function push(location) {
 
 const router = new Router({
   routes: [
-    //首页
-    {
-      path: '/',
-      redirect: '/login'
-
-    },
-    {
-      path: '/test',
-      component: Test
-
-    },
     //登录页
     {
       path: '/login',
@@ -35,7 +24,60 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       component: Login
     },
-    //主页
+    //首页
+    {
+      path: '/',
+      redirect: '/main'
+
+    },
+    {
+      path: '/home',
+      component: Home,
+      /* redirect: '/customer',
+      children: [
+        //hello欢迎页面
+        {
+          path: '/test',
+          name: 'Test',
+          component: () => import('./views/Test.vue')
+        },
+        {
+          path: '/customer',
+          name: 'Customer',
+          component: () => import('./views/Customer.vue')
+        },
+        {
+          path: '/settings',
+          name: 'Settings',
+          component: () => import('./views/Settings.vue')
+        }
+      ] */
+    },
+
+    {
+      path: '/main',
+      component: () => import('./views/Main.vue'),
+      redirect: '/test',
+      children: [
+        //hello欢迎页面
+        {
+          path: '/test',
+          name: 'Test',
+          component: () => import('./views/Test.vue')
+        },
+        {
+          path: '/customer',
+          name: 'Customer',
+          component: () => import('./views/Customer.vue')
+        },
+        {
+          path: '/settings',
+          name: 'Settings',
+          component: () => import('./views/Settings.vue')
+        }
+      ]
+    }
+
 
   ]
 

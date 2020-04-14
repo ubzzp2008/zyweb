@@ -33,6 +33,9 @@ export default {
         password: null
       }
     };
+  },
+  methods:{
+    
   }
 };
 </script>

@@ -1,116 +1,313 @@
 <template>
-  <el-container style="height:100%;">
-    <el-header style="height:40px;">Header</el-header>
-    <el-container>
-      <el-aside width="120px">
-        <el-menu default-active="1" class="el-menu-vertical-demo">
-          <el-menu-item index="1">
-            <div><i class="el-icon-location"></i></div>
-            <span slot="title">导航一</span>
-          </el-menu-item>
-          <el-menu-item index="2">
-            <div><i class="el-icon-menu"></i></div>
-            <span slot="title">导航二</span>
-          </el-menu-item>
-          <el-menu-item index="3">
-            <div><i class="el-icon-document"></i></div>
-            <span slot="title">导航三</span>
-          </el-menu-item>
-          <el-menu-item index="4">
-            <div><i class="el-icon-setting"></i></div>
-            <span slot="title">导航四</span>
-          </el-menu-item>
-          <!--  <el-menu-item index="4">
-            <i class="el-icon-s-tools"></i>
-          </el-menu-item>-->
-        </el-menu>
-      </el-aside>
-      <el-main>Main</el-main>
-    </el-container>
-  </el-container>
-  <!-- <div>
-    <el-form :model="userInfo" label-width="80px" style="width:30%;margin:0 auto;">
-      <el-form-item label="用户名：" prop="username">
-        <el-input placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="密码：" prop="password">
-        <el-input placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary">提交</el-button>
-      </el-form-item>
-    </el-form>
-  </div>-->
+  <!--系统管理/菜单管理 -->
+  <div class="Test">
+    <el-row :gutter="20">
+      <el-col :span="14">
+        <div>
+          <el-table :data="tableData" border style="width: 100%;" max-height="550" ref="clickTable">
+            <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
+            <!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
+            <el-table-column prop="maktx" label="商品名称" :show-overflow-tooltip="true" align="center"></el-table-column>
+            <el-table-column label="单价" width="100" prop="price" align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.price? parseFloat(scope.row.price).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="数量" prop="num" width="170" align="center">
+              <template slot-scope="scope">
+                <!-- <el-input-number >{{scope.row.num? parseFloat(scope.row.num).toFixed(2):0.00.toFixed(2)}}</el-input-number> -->
+                <el-input-number
+                  v-model="scope.row.num"
+                  @change="(val)=>{numChange(val,scope)}"
+                  :min="0"
+                  :max="999999"
+                ></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column label="原价" prop="totalMoney" align="center" width="150">
+              <template slot-scope="scope">
+                <span>{{scope.row.totalMoney? parseFloat(scope.row.totalMoney).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="折扣价" prop="totalMoney" align="center" width="150">
+              <template slot-scope="scope">
+                <span>{{scope.row.money? parseFloat(scope.row.money).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="100">
+              <template slot-scope="scope">
+                <el-button type="danger" size="mini" @click="delGoods(scope)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-card :body-style="{ padding: '0px' }">
+            <div style="padding: 14px;">
+              <span>原价: ￥{{hjMoney}}</span>
+              <span style="padding-left: 30px;">折扣价：￥{{disMoney}}</span>
+              <div style="padding-top:10px;">
+                <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
+                <el-button type="danger" size="medium" @click="delGoods(scope)">删除</el-button>
+                <el-button type="success" size="medium" @click="delGoods(scope)">结账</el-button>
+              </div>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+      <el-col :span="10">
+        <div style="background-color:grey;">fdsafdsa</div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
+<style>
+.el-input-number {
+  /* position: relative;
+    display: inline-block; */
+  width: 140px;
+  /* line-height: 38px; */
+}
+</style>
+
 <script>
+//import { isArray } from "util";
 export default {
   name: "Test",
   data: function() {
     return {
-      userInfo: {
-        username: null,
-        password: null
-      }
+      hjMoney: 0.0,
+      disMoney: 0.0,
+      tableData: [
+        {
+          id: "12987122",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987123",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987124",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987125",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        },
+        {
+          id: "12987126",
+          maktx: "王小虎1",
+          price: 12.0,
+          num: 6.0,
+          totalMoney: 72.0,
+          money: 72.0
+        }
+      ]
     };
+  },
+
+  mounted() {
+    this.sumMoney();
+  },
+  watch: {},
+  methods: {
+    delGoods: function(scope) {
+      this.tableData.splice(scope.$index, 1);
+      this.sumMoney();
+    },
+    numChange: function(val, scope) {
+      this.tableData[scope.$index].totalMoney = parseFloat(
+        scope.row.price * val
+      ).toFixed(2);
+      this.sumMoney();
+    },
+    sumMoney: function() {
+      let _this = this;
+      _this.hjMoney = 0;
+      this.tableData.forEach(row => {
+        _this.hjMoney = (
+          parseFloat(_this.hjMoney) + parseFloat(row.price * row.num)
+        ).toFixed(2);
+        /*  if (index === 0) {
+            sums[index] = '总价';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+            sums[index] += ' 元';
+          } else {
+            sums[index] = 'N/A';
+          } */
+      });
+    }
   }
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-.el-header {
-  background-color: #b3c0d1;
-  color: #333;
-  text-align: center;
-  line-height: 40px;
-}
-
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  /* line-height: 200px; */
-}
-
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  /* line-height: 160px; */
-}
-
-.el-menu-item {
-  height: 120px;
-  padding-left: 0px;
-  line-height: 30px;
-  border-bottom: solid 1px #e9eef3;
-  
-}
-.el-menu-item.is-active {
-    color: #409EFF;
-    background-color: #e9eef3;
-}
-
-.el-menu-item [class^="el-icon-"] {
-  font-size: 50px;
-  margin-right: 25px;
-  margin-top: 20px;
-}
-
-.el-menu {
-  height: 100%;
-}
-/* body > .el-container {
-    margin-bottom: 40px;
-  } */
-
-/* .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  } */
-
-/* .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  } */
-</style>
