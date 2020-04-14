@@ -67,6 +67,12 @@
   width: 140px;
   /* line-height: 38px; */
 }
+.el-table .cell {
+  line-height: 20px;
+}
+.el-table td, .el-table th {
+    padding: 2px 0;
+}
 </style>
 
 <script>
@@ -80,158 +86,6 @@ export default {
       tableData: [
         {
           id: "12987122",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987123",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987124",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987125",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
-          maktx: "王小虎1",
-          price: 12.0,
-          num: 6.0,
-          totalMoney: 72.0,
-          money: 72.0
-        },
-        {
-          id: "12987126",
           maktx: "王小虎1",
           price: 12.0,
           num: 6.0,

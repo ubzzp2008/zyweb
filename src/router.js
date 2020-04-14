@@ -27,19 +27,24 @@ const router = new Router({
     //首页
     {
       path: '/',
-      redirect: '/main'
+      redirect: '/home'
 
     },
     {
       path: '/home',
       component: Home,
-      /* redirect: '/customer',
+      redirect: '/addGoods',
       children: [
         //hello欢迎页面
         {
-          path: '/test',
-          name: 'Test',
-          component: () => import('./views/Test.vue')
+          path: '/addGoods',
+          name: 'AddGoods',
+          component: () => import('./views/AddGoods.vue')
+        },
+        {
+          path: '/orderList',
+          name: 'OrderList',
+          component: () => import('./views/OrderList.vue')
         },
         {
           path: '/customer',
@@ -47,28 +52,9 @@ const router = new Router({
           component: () => import('./views/Customer.vue')
         },
         {
-          path: '/settings',
-          name: 'Settings',
-          component: () => import('./views/Settings.vue')
-        }
-      ] */
-    },
-
-    {
-      path: '/main',
-      component: () => import('./views/Main.vue'),
-      redirect: '/test',
-      children: [
-        //hello欢迎页面
-        {
-          path: '/test',
-          name: 'Test',
-          component: () => import('./views/Test.vue')
-        },
-        {
-          path: '/customer',
-          name: 'Customer',
-          component: () => import('./views/Customer.vue')
+          path: '/report',
+          name: 'Report',
+          component: () => import('./views/Report.vue')
         },
         {
           path: '/settings',
@@ -76,6 +62,40 @@ const router = new Router({
           component: () => import('./views/Settings.vue')
         }
       ]
+    },
+
+    {
+      path: '/main',
+      component: () => import('./views/Main.vue'),
+      /* redirect: '/addGoods',
+      children: [
+        //hello欢迎页面
+        {
+          path: '/addGoods',
+          name: 'AddGoods',
+          component: () => import('./views/AddGoods.vue')
+        },
+        {
+          path: '/orderList',
+          name: 'OrderList',
+          component: () => import('./views/OrderList.vue')
+        },
+        {
+          path: '/customer',
+          name: 'Customer',
+          component: () => import('./views/Customer.vue')
+        },
+        {
+          path: '/report',
+          name: 'Report',
+          component: () => import('./views/Report.vue')
+        },
+        {
+          path: '/settings',
+          name: 'Settings',
+          component: () => import('./views/Settings.vue')
+        }
+      ] */
     }
 
 

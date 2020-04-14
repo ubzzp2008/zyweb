@@ -1,122 +1,117 @@
 <template>
-  <el-container style="height:100%;">
-    <el-header style="height:40px;">Header</el-header>
+  <div>
     <el-container>
-      <el-aside width="120px">
-        <el-menu default-active="2" router class="el-menu-vertical-demo">
-          <el-menu-item index="2" route="/customer">
-            <div>
-              <i class="el-icon-menu"></i>
-            </div>
-            <span slot="title">导航二</span>
+      <el-header style="height:80px;">
+        <el-menu
+          :default-active="activeIndex"
+          class="el-menu-demo"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          router
+          @select="menuSelect"
+        >
+          <el-menu-item index="1" route="/addGoods">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-platform-eleme"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>点餐</span>
+            </template>
           </el-menu-item>
-          <el-menu-item index="3" route="/test">
-            <div>
-              <i class="el-icon-document"></i>
-            </div>
-            <span slot="title">导航三</span>
+          <el-menu-item index="2" route="/orderList">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-goods"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>挂单</span>
+            </template>
           </el-menu-item>
-          <el-menu-item index="4" route="/settings">
-            <div>
-              <i class="el-icon-setting"></i>
-            </div>
-            <span slot="title">导航四</span>
+          <el-menu-item index="3" route="/customer">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-user-solid"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>会员管理</span>
+            </template>
           </el-menu-item>
-          <!--  <el-menu-item index="4">
-            <i class="el-icon-s-tools"></i>
-          </el-menu-item>-->
+          <el-menu-item index="4" route="/report">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-data"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>统计</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="5" route="/settings">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-tools"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>配置管理</span>
+            </template>
+          </el-menu-item>
         </el-menu>
-      </el-aside>
-      <el-main style="padding:5px">
-        <router-view style="margin:-20px"></router-view>
+      </el-header>
+
+      <el-main>
+        <router-view style="margin:0px"></router-view>
       </el-main>
     </el-container>
-  </el-container>
-  <!-- <div>
-    <el-form :model="userInfo" label-width="80px" style="width:30%;margin:0 auto;">
-      <el-form-item label="用户名：" prop="username">
-        <el-input placeholder="请输入用户名"></el-input>
-      </el-form-item>
-      <el-form-item label="密码：" prop="password">
-        <el-input placeholder="请输入密码"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary">提交</el-button>
-      </el-form-item>
-    </el-form>
-  </div>-->
+  </div>
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .el-header {
+  padding: 0 0px;
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
-  line-height: 40px;
-}
-
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  text-align: center;
-  /* line-height: 200px; */
+  line-height: 60px;
 }
 
 .el-main {
-  background-color: #e9eef3;
-  color: #333;
+  /* background-color: #e9eef3;
+  color: #333; */
   text-align: center;
-  /* line-height: 160px; */
+  height: 550px;
 }
 
-.el-menu-item {
-  height: 120px;
-  padding-left: 0px;
-  line-height: 30px;
-  border-bottom: solid 1px #e9eef3;
+.el-menu--horizontal > .el-menu-item {
+  height: 81px;
+  line-height: 20px;
+  font-size: 16px;
+  width: 110px;
 }
-.el-menu-item.is-active {
-  color: #409eff;
-  background-color: #e9eef3;
-}
-
-.el-menu-item [class^="el-icon-"] {
-  font-size: 50px;
-  margin-right: 25px;
-  margin-top: 20px;
-}
-
-.el-menu {
-  height: 100%;
-}
-/* body > .el-container {
-    margin-bottom: 40px;
-  } */
-
-/* .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  } */
-
-/* .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  } */
 </style>
 <script>
 export default {
   name: "home",
   data: function() {
     return {
-      userInfo: {
-        username: null,
-        password: null
-      }
+      activeIndex: "1"
     };
   },
   methods: {
-    // menuClick: function() {
-    //   console.log("aaa");
-    // }
+    menuSelect: function() {
+     this.$router.push({ path: this.activeIndex });
+    }
   }
 };
 </script>

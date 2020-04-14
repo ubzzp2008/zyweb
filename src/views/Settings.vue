@@ -8,7 +8,7 @@
           <el-breadcrumb-item>用户管理</el-breadcrumb-item>
         </el-breadcrumb>
       </h3>
-    </el-row> -->
+    </el-row>-->
     <el-row>
       <el-card shadow="always">
         <!-- 查询框 -->
@@ -57,7 +57,7 @@
           <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
           <el-table-column prop="empCode" label="工号" width="80" align="center"></el-table-column>
           <el-table-column prop="userName" label="用户名" width="180" align="center"></el-table-column>
-          <el-table-column prop="realName" label="姓名"  :show-overflow-tooltip="true" align="center"></el-table-column>
+          <el-table-column prop="realName" label="姓名" :show-overflow-tooltip="true" align="center"></el-table-column>
           <el-table-column prop="email" label="邮箱" align="center" width="260"></el-table-column>
           <el-table-column prop="phone" label="电话" align="center" width="150"></el-table-column>
           <el-table-column prop="posName" label="主岗位" :show-overflow-tooltip="true" align="center"></el-table-column>
@@ -228,6 +228,7 @@
     </el-dialog>
   </div>
 </template>
+
 
 <script>
 import { isArray } from "util";
@@ -420,7 +421,7 @@ export default {
     //获取table数据
     fGetTableData: function() {
       let _this = this;
-       
+
       this.axios
         .post(window.sHost + window.sUrl.systemUrl.queryUserList, {
           pageNum: _this.pageNum,
@@ -430,7 +431,6 @@ export default {
         })
         .then(response => {
           if (response.data.success) {
-             
             _this.tableData = response.data.obj.list;
             _this.total = response.data.obj.total;
           } else {

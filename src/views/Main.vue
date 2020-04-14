@@ -10,30 +10,48 @@
           v-model="activeIndex"
           @tab-click="tabClick"
         >
-          <el-tab-pane name="/settings">
+          <el-tab-pane name="/addGoods">
             <span slot="label">
               <div>
-                <i class="el-icon-setting" style="font-size: 50px;margin: 10px;"></i>
+                <i class="el-icon-platform-eleme" style="font-size: 45px;margin: 5px;"></i>
               </div>
-              <span>配置管理</span>
+              <span>点餐</span>
+            </span>
+            <router-view />
+          </el-tab-pane>
+          <el-tab-pane name="/orderList">
+            <span slot="label">
+              <div>
+                <i class="el-icon-s-goods" style="font-size: 45px;margin: 5px;"></i>
+              </div>
+              <span>挂单</span>
             </span>
             <router-view />
           </el-tab-pane>
           <el-tab-pane name="/customer">
             <span slot="label">
               <div>
-                <i class="el-icon-setting" style="font-size: 50px;margin: 10px;"></i>
+                <i class="el-icon-user-solid" style="font-size: 45px;margin: 5px;"></i>
               </div>
-              <span>配置哈</span>
+              <span>会员管理</span>
             </span>
             <router-view />
           </el-tab-pane>
-          <el-tab-pane name="/test">
+          <el-tab-pane name="/report">
             <span slot="label">
               <div>
-                <i class="el-icon-setting" style="font-size: 50px;margin: 10px;"></i>
+                <i class="el-icon-s-data" style="font-size: 45px;margin: 5px;"></i>
               </div>
-              <span>管理</span>
+              <span>统计</span>
+            </span>
+            <router-view />
+          </el-tab-pane>
+          <el-tab-pane name="/settings">
+            <span slot="label">
+              <div>
+                <i class="el-icon-s-tools" style="font-size: 45px;margin: 5px;"></i>
+              </div>
+              <span>配置管理</span>
             </span>
             <router-view />
           </el-tab-pane>
@@ -91,9 +109,9 @@
 </template>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-.Main {
+/* .Main {
   height: 100%;
-}
+} */
 .el-header {
   background-color: #b3c0d1;
   color: #333;
@@ -101,10 +119,10 @@
   line-height: 40px;
 }
 
-.el-container {
+/* .el-container {
   height: 100%;
 }
-
+ */
 .el-main {
   background-color: #e9eef3;
   color: #333;
@@ -114,9 +132,9 @@
 }
 
 .el-tabs__item {
-  height: 95px;
+  height: 80px;
   line-height: 15px;
-  font-size: 18px;
+  font-size: 15px;
   width: 180px;
 }
 .el-tabs--left .el-tabs__item.is-left {
@@ -128,11 +146,7 @@ export default {
   name: "Main",
   data: function() {
     return {
-      activeIndex: "/test",
-      userInfo: {
-        username: null,
-        password: null
-      }
+      activeIndex: "/addGoods"
     };
   },
   methods: {

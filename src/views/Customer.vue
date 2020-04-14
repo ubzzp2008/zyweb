@@ -1,20 +1,20 @@
 <template>
   <!--系统管理/菜单管理 -->
   <div class="Customer">
-    <el-row style="margin-bottom:-10px">
+    <!-- <el-row style="margin-bottom:-10px">
       <h3>
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-breadcrumb-item>系统管理</el-breadcrumb-item>
           <el-breadcrumb-item>用户ghahdsahgdasg管理</el-breadcrumb-item>
         </el-breadcrumb>
       </h3>
-    </el-row>
+    </el-row> -->
     <el-row>
-      <el-card shadow="always">
+      <!-- <el-card shadow="always"> -->
         <!-- 查询框 -->
-        <el-row style="margin-bottom:10px">
+        <!-- <el-row style="margin-bottom:10px">
           <span style="font-size:10px;color:red">提示：若需模糊查询，请使用符号*占位</span>
-        </el-row>
+        </el-row> -->
         <el-row>
           <el-form :inline="true" :model="oUserList">
             <el-form-item label="用户名">
@@ -92,52 +92,34 @@
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
-      </el-card>
+      <!-- </el-card> -->
     </el-row>
     <!-- 新增 -->
     <el-dialog
-      title="新增"
+      title="新增会员"
       :visible.sync="addVisible"
-      width="30%"
+      width="60%"
+      top="5vh"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       v-dialogDrag
     >
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="120px">
-        <el-form-item label="工号:" prop="empCode">
+        <el-form-item label="会员姓名:" prop="empCode">
           <el-input v-model="ruleForm.empCode" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户名:" prop="userName">
+        <el-form-item label="手机号:" prop="userName">
           <el-input v-model="ruleForm.userName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="密码:" prop="password">
-          <el-input
-            v-model="ruleForm.password"
-            placeholder="请输入6~18位密码"
-            autocomplete="off"
-            show-password
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="姓名:" prop="realName">
-          <el-input v-model="ruleForm.realName" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱:" prop="email">
-          <el-input v-model="ruleForm.email" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="主岗位:" prop="posId">
-          <el-cascader
-            style="width:100%"
-            v-model="ruleForm.posId"
-            :options="options"
-            :props="{ checkStrictly: true }"
-            clearable
-          ></el-cascader>
-        </el-form-item>
         <el-form-item label="性别:" prop="sex">
-          <el-select v-model="ruleForm.sex" placeholder="请选择性别" style="width:100%">
+          <el-radio-group v-model="ruleForm.lockFlag">
+            <el-radio label="1">先生</el-radio>
+            <el-radio label="0">女士</el-radio>
+          </el-radio-group>
+          <!-- <el-select v-model="ruleForm.sex" placeholder="请选择性别" style="width:100%">
             <el-option label="男" value="1"></el-option>
             <el-option label="女" value="0"></el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="出生日期:" prop="birthday">
           <el-date-picker
@@ -147,15 +129,15 @@
             style="width:100%"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="电话:" prop="phone">
-          <el-input v-model="ruleForm.phone" autocomplete="off" maxlength="11"></el-input>
+        <!-- <el-form-item label="生效日期:" prop="email">
+          <el-input v-model="ruleForm.email" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="状态:" prop="lockFlag">
           <el-radio-group v-model="ruleForm.lockFlag">
             <el-radio label="0">启用</el-radio>
             <el-radio label="1">禁用</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelModal('ruleForm')" size="small">取 消</el-button>
@@ -167,7 +149,7 @@
     <el-dialog
       title="编辑"
       :visible.sync="editVisible"
-      width="30%"
+      width="80%"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       v-dialogDrag
