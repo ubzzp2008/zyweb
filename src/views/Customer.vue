@@ -38,11 +38,18 @@
         <el-button type="warning" size="small" style="float:left" @click="edit">编辑</el-button>
         <el-button type="danger" size="small" style="float:left" @click="deletes">删除</el-button>
       </el-row>
-      <el-table :data="customerList" border style="width: 100%;" max-height="555" ref="clickTable">
+      <el-table
+        :data="customerList"
+        border
+        style="width: 100%;"
+        max-height="560"
+        ref="clickTable"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
         <el-table-column prop="userName" label="会员姓名" :show-overflow-tooltip="true" align="center"></el-table-column>
-        <el-table-column prop="phone" label="联系电话" :show-overflow-tooltip="true" align="center"></el-table-column>
+        <el-table-column prop="phone" label="手机号" :show-overflow-tooltip="true" align="center"></el-table-column>
         <el-table-column
           prop="sex"
           label="性别"
@@ -71,6 +78,7 @@
       top="5vh"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      @close="cancelModal('ruleForm')"
       v-dialogDrag
     >
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="120px">
@@ -78,7 +86,7 @@
           <el-input v-model="ruleForm.userName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号:" prop="phone">
-          <el-input v-model="ruleForm.phone" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.phone" maxlength="11" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别:" prop="sex">
           <el-radio-group v-model="ruleForm.sex">
@@ -102,46 +110,30 @@
     </el-dialog>
 
     <!-- 编辑 -->
-    <!-- <el-dialog
+    <el-dialog
       title="编辑"
       :visible.sync="editVisible"
-      width="80%"
+      width="60%"
+      top="5vh"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      @close="cancelModal('editForm')"
       v-dialogDrag
     >
       <el-form :model="editForm" ref="editForm" :rules="rules" label-width="120px">
-        <el-form-item label="工号:">
-          <span>{{editForm.empCode}}</span>
+        <el-form-item label="会员姓名:">
+          <el-input v-model="editForm.userName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="用户名:">
-          <span>{{editForm.userName}}</span>
+        <el-form-item label="手机号:">
+          <el-input v-model="editForm.phone" maxlength="11" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="姓名:" prop="realName">
-          <span>{{editForm.realName}}</span>
+        <el-form-item label="sex:" prop="realName">
+          <el-radio-group v-model="editForm.sex">
+            <el-radio label="1">先生</el-radio>
+            <el-radio label="0">女士</el-radio>
+          </el-radio-group>
         </el-form-item>
-        <el-form-item label="邮箱:">
-          <span>{{editForm.email}}</span>
-        </el-form-item>
-        <el-form-item label="电话:">
-          <span>{{editForm.phone}}</span>
-        </el-form-item>
-        <el-form-item label="主岗位:" prop="posId">
-          <el-cascader
-            style="width:100%"
-            v-model="editForm.posId"
-            :options="options"
-            :props="{ checkStrictly: true }"
-            clearable
-          ></el-cascader>
-        </el-form-item>
-        <el-form-item label="性别:" prop="sex">
-          <el-select v-model="editForm.sex" placeholder="请选择性别" style="width:100%">
-            <el-option label="男" value="1"></el-option>
-            <el-option label="女" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出生日期:" prop="birthday">
+        <el-form-item label="生日:" prop="birthday">
           <el-date-picker
             type="date"
             value-format="yyyy-MM-dd"
@@ -149,34 +141,23 @@
             style="width:100%"
           ></el-date-picker>
         </el-form-item>
-
-        <el-form-item label="状态:" prop="lockFlag">
-          <el-radio-group v-model="editForm.lockFlag">
-            <el-radio label="0">启用</el-radio>
-            <el-radio label="1">禁用</el-radio>
-          </el-radio-group>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelModal('editForm')" size="small">取 消</el-button>
         <el-button type="primary" @click="fEditsubmit('editForm')" size="small">确 定</el-button>
       </div>
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
 <script>
-/* import { isArray } from "util"; */
 export default {
   name: "Customer",
   data: function() {
-    var nameCheck = (rule, value, callback) => {
+    var phoneValidate = (rule, value, callback) => {
       this.axios
         .get(
-          window.sHost +
-            window.sUrl.systemUrl.getUserByUserName +
-            "?userName=" +
-            value
+          window.sHost + window.sUrl.shop.checkPhoneExist + "?phone=" + value
         )
         .then(response => {
           if (!response.data.success) {
@@ -187,7 +168,7 @@ export default {
         })
         .catch();
     };
-    var nameCheckLength = (rule, value, callback) => {
+    /* var nameCheckLength = (rule, value, callback) => {
       let _val = value.split("");
       if (_val.length > 20) {
         callback(new Error("用户名长度不能大于20位！"));
@@ -202,7 +183,7 @@ export default {
       } else {
         callback();
       }
-    };
+    }; */
     var phoneCheck = (rule, value, callback) => {
       if (value == null || value == "") {
         callback();
@@ -230,33 +211,19 @@ export default {
       //验证列表
       ruleForm: {
         userName: null,
-        password: null,
-        realName: null,
-        sex: null,
-        birthday: null,
         phone: null,
-        lockFlag: "0",
-        // posId: null,
-        email: null, //邮箱
-        empCode: null //工号
+        sex: "1",
+        birthday: null
       },
-      finInvoiceUuidList: [],
       rules: {
         userName: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { validator: nameCheck, trigger: ["blur"] },
-          { validator: nameCheckLength, trigger: ["blur", "change"] }
+          { required: true, message: "请输入会员姓名", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { validator: passwordCheck, trigger: ["change", "blur"] }
-        ],
-        realName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        lockFlag: [{ required: true, message: "请选择状态", trigger: "blur" }],
-        posId: [{ required: true, message: "请选择主岗位", trigger: "blur" }],
-        // email: { required: true, message: "请输入邮箱", trigger: "blur" },
-        empCode: { required: true, message: "请输入工号", trigger: "blur" },
-        phone: [{ validator: phoneCheck, trigger: ["blur"] }]
+        phone: [
+          { required: true, message: "请输入手机号", trigger: "blur" },
+          { validator: phoneCheck, trigger: ["blur"] },
+          { validator: phoneValidate, trigger: ["blur"] }
+        ]
       },
       selectRow: [] //设置选中行
     };
@@ -266,37 +233,32 @@ export default {
     this.initTable();
   },
   watch: {
-    /*  allSelect(data) {
+    allSelect(data) {
       this.selectRow = [];
       if (data.length > 0) {
         data.forEach(item => {
           this.selectRow.push(item.id);
         });
       }
-    } */
+    }
   },
   methods: {
     formatter: function(row) {
       return row.sex === "0" ? "女" : row.sex === "1" ? "男" : "";
     },
     /* 新增表单 */
-    /* submitForm(formName) {
+    submitForm(formName) {
       let _this = this;
       _this.$refs[formName].validate(valid => {
         if (valid) {
-          _this.$refs[formName].model.posId = _this.$refs[formName].model.posId[
-            _this.$refs[formName].model.posId.length - 1
-          ]
-            ? _this.$refs[formName].model.posId[
-                _this.$refs[formName].model.posId.length - 1
-              ]
-            : "0";
+          window.master.fLoadingOpen();
           _this.axios
             .post(
-              window.sHost + window.sUrl.systemUrl.saveUserInfo,
+              window.sHost + window.sUrl.shop.saveCustomer,
               JSON.parse(JSON.stringify(_this.$refs[formName].model))
             )
             .then(response => {
+              window.master.fLoadingClose();
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
@@ -306,29 +268,27 @@ export default {
                 window.master.fErrorMes(response.data.msg);
               }
             })
-            .catch();
+            .catch(() => {
+              window.master.fLoadingClose();
+            });
         } else {
           return false;
         }
       });
-    }, */
+    },
     /* 编辑表单 */
-    /* fEditsubmit(formName) {
+    fEditsubmit(formName) {
       let _this = this;
       _this.$refs[formName].validate(valid => {
         if (valid) {
-          let value = _this.$refs[formName].model.posId;
-          if (!isArray(value)) {
-            _this.$refs[formName].model.posId = value;
-          } else {
-            _this.$refs[formName].model.posId = value[value.length - 1];
-          }
+          window.master.fLoadingOpen();
           _this.axios
             .post(
-              window.sHost + window.sUrl.systemUrl.updateUserInfo,
+              window.sHost + window.sUrl.shop.updateCustomer,
               JSON.parse(JSON.stringify(_this.$refs[formName].model))
             )
             .then(response => {
+              window.master.fLoadingClose();
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.editVisible = false;
@@ -338,12 +298,14 @@ export default {
                 window.master.fErrorMes(response.data.msg);
               }
             })
-            .catch();
+            .catch(() => {
+              window.master.fLoadingClose();
+            });
         } else {
           return false;
         }
       });
-    }, */
+    },
     //取消dialog
     cancelModal: function(formName) {
       this.addVisible = false;
@@ -352,36 +314,27 @@ export default {
     },
     //获取table数据
     fGetUserList: function() {
-      let _this=this;
-      this.customerList = [];
-      for (var i = 1001; i < 1041; i++) {
-        _this.customerList.push({
-          id: i,
-          userName: "用户" + i,
-          phone: "1300000" + i,
-          sex: i % 2 == 0 ? "0" : "1",
-          birthday: "2020-10-10",
-          addDate: "2020-10-11"
-        });
-        _this.total = _this.customerList.length;
-      }
-
-      /* this.axios
-        .post(window.sHost + window.sUrl.systemUrl.queryUserList, {
+      let _this = this;
+      window.master.fLoadingOpen();
+      this.axios
+        .post(window.sHost + window.sUrl.shop.queryCustomerList, {
           pageNum: _this.pageNum,
           pageSize: _this.pageSize,
           userName: window.master.strReplace(_this.oUserList.userName),
-          realName: window.master.strReplace(_this.oUserList.realName)
+          phone: window.master.strReplace(_this.oUserList.phone)
         })
         .then(response => {
+          window.master.fLoadingClose();
           if (response.data.success) {
-            _this.tableData = response.data.obj.list;
+            _this.customerList = response.data.obj.list;
             _this.total = response.data.obj.total;
           } else {
             window.master.fErrorMes(response.data.msg);
           }
         })
-        .catch(); */
+        .catch(() => {
+          window.master.fLoadingClose();
+        });
     },
 
     //初始化数据
@@ -402,23 +355,9 @@ export default {
       _this.fGetUserList();
     },
     //多选框
-    /* handleSelectionChange: function(data) {
+    handleSelectionChange: function(data) {
       this.allSelect = data;
-    }, */
-    //获取岗位格式数据
-    /* findAllPosition: function() {
-      let _this = this;
-      _this.axios
-        .get(window.sHost + window.sUrl.systemUrl.findAllPositionList)
-        .then(response => {
-          if (response.data.success) {
-            _this.options = response.data.obj;
-          } else {
-            window.master.fErrorMes(response.data.msg);
-          }
-        })
-        .catch();
-    }, */
+    },
     //新增
     add: function() {
       this.addVisible = true;
@@ -436,8 +375,8 @@ export default {
         _this.axios
           .get(
             window.sHost +
-              window.sUrl.systemUrl.getUserInfoById +
-              "?userId=" +
+              window.sUrl.shop.getCustomerById +
+              "?id=" +
               _this.allSelect[0].id
           )
           .then(response => {
@@ -458,7 +397,7 @@ export default {
         window.master.fWarningMes(this.$store.state.sOnlySelectOneMes);
       } else {
         _this
-          .$confirm("是否确定删除该用户?", "提示", {
+          .$confirm("确定删除该会员?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
@@ -468,12 +407,14 @@ export default {
           })
           .then(
             () => {
+              window.master.fLoadingOpen();
               _this.axios
                 .post(
-                  window.sHost + window.sUrl.systemUrl.deleteUserInfoById,
-                  "userId=" + _this.sel[0].id
+                  window.sHost + window.sUrl.shop.deleteOrgById,
+                  "id=" + _this.allSelect[0].id
                 )
                 .then(response => {
+                  window.master.fLoadingClose();
                   if (response.data.success) {
                     _this.initTable();
                     window.master.fSuccessMes(response.data.msg);
@@ -486,84 +427,7 @@ export default {
             () => {}
           );
       }
-    },
-    //初始化密码
-    /* initPassword: function() {
-      let _this = this;
-      if (
-        _this.allSelect === undefined ||
-        _this.allSelect.length < 1 ||
-        _this.allSelect.length > 1
-      ) {
-        window.master.fWarningMes(this.$store.state.sOnlySelectOneMes);
-      } else {
-        _this
-          .$confirm("是否确定初始化选中用户密码为[123456]吗?", "提示", {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true,
-            closeOnPressEscape: false,
-            closeOnClickModal: false
-          })
-          .then(
-            () => {
-              _this.axios
-                .post(
-                  window.sHost + window.sUrl.systemUrl.initPassword,
-                  "userId=" + _this.allSelect[0].id
-                )
-                .then(response => {
-                  if (response.data.success) {
-                    _this.initTable();
-                    window.master.fSuccessMes(response.data.msg);
-                  } else {
-                    window.master.fErrorMes(response.data.msg);
-                  }
-                })
-                .catch();
-            },
-            () => {}
-          );
-      }
-    }, */
-
-    //启用、禁用设置
-    /* isLockFlag: function(param, sId) {
-      let _this = this;
-      _this
-        .$confirm(
-          param === 0 ? "是否确定启用该用户?" : "是否确定禁用该用户?",
-          "提示",
-          {
-            confirmButtonText: "确定",
-            cancelButtonText: "取消",
-            type: "warning",
-            center: true,
-            closeOnPressEscape: false,
-            closeOnClickModal: false
-          }
-        )
-        .then(
-          () => {
-            _this.axios
-              .post(window.sHost + window.sUrl.systemUrl.lockOrUnlockUser, {
-                id: sId,
-                lockFlag: param
-              })
-              .then(res => {
-                if (res.data.success) {
-                  _this.initTable();
-                  window.master.fSuccessMes(res.data.msg);
-                } else {
-                  window.master.fErrorMes(res.data.msg);
-                }
-              })
-              .catch();
-          },
-          () => {}
-        );
-    } */
+    }
   }
 };
 </script>
