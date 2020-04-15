@@ -71,7 +71,7 @@
       </el-header>
 
       <el-main>
-        <router-view style="margin:0px"></router-view>
+          <router-view style="margin:0px"></router-view>
       </el-main>
     </el-container>
   </div>
@@ -86,12 +86,9 @@
   line-height: 60px;
 }
 
-.el-main {
-  /* background-color: #e9eef3;
-  color: #333; */
+/* .el-main {
   text-align: center;
-  height: 550px;
-}
+} */
 
 .el-menu--horizontal > .el-menu-item {
   height: 81px;
@@ -105,12 +102,16 @@ export default {
   name: "home",
   data: function() {
     return {
-      activeIndex: "1"
+      activeIndex: "1",
     };
   },
+  mounted() {
+    this.$router.push({ path: "/home" });
+  },
   methods: {
-    menuSelect: function() {
-     this.$router.push({ path: this.activeIndex });
+    menuSelect: function(index, indexPath) {
+      this.activeIndex = index;
+      this.$router.push({ path: indexPath });
     }
   }
 };

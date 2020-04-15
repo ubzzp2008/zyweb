@@ -4,7 +4,19 @@
     <el-row :gutter="20">
       <el-col :span="14">
         <div>
-          <el-table :data="goodsData" border style="width: 100%;height:100%;" ref="clickTable">
+          <el-card :body-style="{ padding: '0px' }">
+            <el-row style="margin: 10px;line-height: 40px;">
+              <span>总金额: ￥{{hjMoney}}</span>
+              <span style="padding-left: 30px;">会员金额：￥{{disMoney}}</span>
+
+              <span style="float:right;margin-right:20px">
+                <el-button type="danger" size="medium" @click="delGoods(scope)">清空</el-button>
+                <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
+                <el-button type="success" size="medium" @click="delGoods(scope)">结账</el-button>
+              </span>
+            </el-row>
+          </el-card>
+          <el-table :data="goodsData" border style="width: 100%;max-height:500px;" ref="clickTable">
             <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
             <!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
             <el-table-column prop="maktx" label="商品名称" :show-overflow-tooltip="true" align="center"></el-table-column>
@@ -40,17 +52,6 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-card :body-style="{ padding: '0px' }">
-            <div style="padding: 14px;">
-              <span>总金额: ￥{{hjMoney}}</span>
-              <span style="padding-left: 30px;">会员金额：￥{{disMoney}}</span>
-              <div style="padding-top:10px;">
-                <el-button type="danger" size="medium" @click="delGoods(scope)">清空</el-button>
-                <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
-                <el-button type="success" size="medium" @click="delGoods(scope)">结账</el-button>
-              </div>
-            </div>
-          </el-card>
         </div>
       </el-col>
       <el-col :span="10">
@@ -58,8 +59,71 @@
         <el-row style="margin-bottom:10px">
           <span style="font-size:16px;">常用菜单</span>
         </el-row>
+        <el-row>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="7" :offset="1">
+            <el-card shadow="hover" class="card_class">
+              <div style="padding: 5px;" @click="goodsClick">
+                <span>好吃的汉堡￥6.00</span>
+                <div class="bottom clearfix">
+                  <time class="huiyuan">会员价￥5.50</time>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+
         <el-row style="margin-bottom:10px">
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -69,7 +133,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -79,7 +143,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -89,7 +153,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -99,7 +163,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -109,7 +173,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -119,7 +183,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -129,7 +193,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -139,7 +203,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -149,7 +213,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -159,7 +223,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -169,7 +233,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -179,7 +243,7 @@
               </div>
             </el-button>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="8" :offset="1">
             <el-button size="medium">
               <div style="padding: 5px;" @click="goodsClick">
                 <span>好吃的汉堡￥6.00</span>
@@ -204,6 +268,15 @@
   width: 140px;
   /* line-height: 38px; */
 }
+.card_class:hover {
+  color: #409eff;
+  background: #ecf5ff;
+  border: 1px solid #dcdfe6;
+  cursor: pointer;
+}
+.el-table {
+  overflow: auto;
+}
 .el-table .cell {
   line-height: 20px;
 }
@@ -213,7 +286,8 @@
 }
 
 .el-card__body {
-  padding: 10px;
+  padding: 0px;
+  text-align: center;
 }
 .el-col {
   padding-bottom: 5px;
@@ -227,6 +301,16 @@
   margin-top: 2px;
   line-height: 12px;
 }
+
+.el-table--border::after, .el-table--group::after, .el-table::before {
+    content: '';
+    display: none;
+    position: absolute;
+    background-color: #EBEEF5;
+    z-index: 1;
+}
+
+
 </style>
 
 <script>

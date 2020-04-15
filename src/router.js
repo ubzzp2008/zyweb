@@ -7,10 +7,11 @@ Vue.use(Router)
 
 
 //解决vue项目路由出现message: "Navigating to current location (XXX) is not allowed"的问题
-/* const routerPush = Router.prototype.push
+const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
-  return routerPush.call(this, location)
-} */
+  return routerPush.call(this, location).catch(error=> error);
+}
+
 
 
 const router = new Router({
@@ -62,43 +63,7 @@ const router = new Router({
           component: () => import('./views/Settings.vue')
         }
       ]
-    },
-
-    {
-      path: '/main',
-      component: () => import('./views/Main.vue'),
-      /* redirect: '/addGoods',
-      children: [
-        //hello欢迎页面
-        {
-          path: '/addGoods',
-          name: 'AddGoods',
-          component: () => import('./views/AddGoods.vue')
-        },
-        {
-          path: '/orderList',
-          name: 'OrderList',
-          component: () => import('./views/OrderList.vue')
-        },
-        {
-          path: '/customer',
-          name: 'Customer',
-          component: () => import('./views/Customer.vue')
-        },
-        {
-          path: '/report',
-          name: 'Report',
-          component: () => import('./views/Report.vue')
-        },
-        {
-          path: '/settings',
-          name: 'Settings',
-          component: () => import('./views/Settings.vue')
-        }
-      ] */
     }
-
-
   ]
 
 })
