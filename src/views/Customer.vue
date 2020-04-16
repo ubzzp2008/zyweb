@@ -410,7 +410,7 @@ export default {
               window.master.fLoadingOpen();
               _this.axios
                 .post(
-                  window.sHost + window.sUrl.shop.deleteOrgById,
+                  window.sHost + window.sUrl.shop.deleteCustomer,
                   "id=" + _this.allSelect[0].id
                 )
                 .then(response => {

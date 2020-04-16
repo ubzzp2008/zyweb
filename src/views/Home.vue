@@ -56,7 +56,7 @@
               <span>统计</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="5" route="/settings">
+          <el-menu-item index="5" route="/goodsList">
             <template slot="title">
               <div>
                 <i
@@ -64,14 +64,14 @@
                   style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
                 ></i>
               </div>
-              <span>配置管理</span>
+              <span>商品管理</span>
             </template>
           </el-menu-item>
         </el-menu>
       </el-header>
 
       <el-main>
-          <router-view style="margin:0px"></router-view>
+        <router-view style="margin:0px"></router-view>
       </el-main>
     </el-container>
   </div>
@@ -102,7 +102,7 @@ export default {
   name: "home",
   data: function() {
     return {
-      activeIndex: "1",
+      activeIndex: "1"
     };
   },
   mounted() {

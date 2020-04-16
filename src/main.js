@@ -15,26 +15,25 @@ Vue.use(ElementUI);
 Vue.use(VueAxios, axios);
 
 
-window.sHost = "http://localhost:8080/demo"; //这里是测试环境中的url
+window.sHost = "http://localhost:8081/demo"; //这里是测试环境中的url
 
 
-/* // request拦截器
+// request拦截器
 axios.interceptors.request.use(
   config => {
-    window.master.fLoadingOpen();
     return config
   },
   error => {
     Promise.reject(error)
-  });
+  })
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-  window.master.fLoadingClose();
+  // 对响应数据做点什么
   return response;
 }, function (error) {
-  window.master.fLoadingClose();
-}); */
+  window.master.fErrorMes(error);
+});
 
 
 window.master = new Vue({

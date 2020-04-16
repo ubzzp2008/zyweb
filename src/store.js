@@ -12,6 +12,29 @@ export default new Vuex.Store({
     sRequireSelectMes: "请选择需要操作的数据",
     //按钮类型
     btnTypeEnum: ["success", "warning", "danger", "primary"],
+    //岗位类型
+    unitEnum: [
+      {
+        code: "份",
+        name: "份"
+      },
+      {
+        code: "根",
+        name: "根"
+      },
+      {
+        code: "串",
+        name: "串"
+      },
+      {
+        code: "只",
+        name: "只"
+      },
+      {
+        code: "个",
+        name: "个"
+      },
+    ]
   },
   mutations: {
 
