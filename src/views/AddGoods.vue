@@ -23,7 +23,15 @@
               <div style="padding: 5px;text-align:center;">
                 <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm">
                   <el-form-item label="桌号：" prop="deskNo">
-                    <el-input v-model.trim="ruleForm.deskNo" placeholder="请输入桌号"></el-input>
+                    <!-- <el-input v-model.trim="ruleForm.deskNo" placeholder="请输入桌号"></el-input> -->
+                    <el-select v-model="ruleForm.deskNo" clearable>
+                      <el-option
+                        v-for="item in allDeskData"
+                        :key="item.deskCode"
+                        :value="item.deskCode"
+                        :label="item.deskName"
+                      ></el-option>
+                    </el-select>
                   </el-form-item>
                   <el-form-item label="会员手机号：" prop="phoneNumber">
                     <el-input
@@ -40,7 +48,7 @@
               <span>总金额: ￥{{parseFloat(hjFee).toFixed(2)}}</span>
               <span style="padding-left: 30px;">会员金额：￥{{parseFloat(disFee).toFixed(2)}}</span>
               <span style="float:right;margin-right:20px">
-                <el-button type="danger" size="medium" @click="delAllSelected()">会员</el-button>
+                <span style="padding-right: 30px;color:red;font-weight: 800;">{{custName}}</span>
                 <el-button type="danger" size="medium" @click="delAllSelected()">清空</el-button>
                 <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
                 <el-button type="success" size="medium" @click="toSaveOrder()">结账</el-button>
@@ -229,8 +237,10 @@ export default {
       deskNo: null,
       hjFee: 0.0,
       disFee: 0.0,
+      allDeskData: [],
       allGoodsData: [],
       selectedGoods: [], //已选择商品的列表
+      custName: null,
       ruleForm: {
         phoneNumber: null,
         deskNo: null
@@ -246,6 +256,7 @@ export default {
 
   mounted() {
     this.getAllGoodsList();
+    this.getAllDeskList();
   },
   watch: {},
   methods: {
@@ -253,25 +264,24 @@ export default {
       let _this = this;
       _this.$refs["ruleForm"].validate(valid => {
         if (valid) {
-          console.log(val);
-          /* _this.axios
-            .post(
-              window.sHost + window.sUrl.shop.saveCustomer,
-              JSON.parse(JSON.stringify(_this.$refs[formName].model))
+          _this.axios
+            .get(
+              window.sHost +
+                window.sUrl.shop.getCustomerByPhone +
+                "?phone=" +
+                val
             )
             .then(response => {
               if (response.data.success) {
-                window.master.fSuccessMes(response.data.msg);
-                _this.addVisible = false;
-                _this.initTable();
-                _this.$refs[formName].resetFields();
+                _this.custName = "会员：" + response.data.obj.userName;
               } else {
+                _this.custName = null;
                 window.master.fErrorMes(response.data.msg);
               }
             })
-            .catch(() => {
-            }); */
+            .catch(() => {});
         } else {
+          _this.custName = null;
           return false;
         }
       });
@@ -288,6 +298,23 @@ export default {
           let data = response.data;
           if (data.success) {
             _this.allGoodsData = data.obj;
+          } else {
+            window.master.fErrorMes(data.msg);
+          }
+        });
+    },
+    //获取所有商品
+    getAllDeskList: function() {
+      let _this = this;
+      _this
+        .axios({
+          method: "get",
+          url: window.sHost + window.sUrl.shop.getAllDeskList
+        })
+        .then(function(response) {
+          let data = response.data;
+          if (data.success) {
+            _this.allDeskData = data.obj;
           } else {
             window.master.fErrorMes(data.msg);
           }
@@ -338,6 +365,9 @@ export default {
     //清空所有选择的商品
     delAllSelected: function() {
       let _this = this;
+      if (_this.selectedGoods.length === 0) {
+        return;
+      }
       this.$confirm("确定清空所有商品?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

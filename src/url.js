@@ -17,6 +17,14 @@ window.sUrl = {
         updateGoods: "/shop/goods/updateGoods",
         deleteGoods: "/shop/goods/deleteGoods",
         getAllGoodsList: "/shop/goods/getAllGoodsList",
+        //餐桌管理
+        queryDeskList: "/shop/desk/queryDeskList",
+        checkDeskCodeExist: "/shop/desk/checkDeskCodeExist",
+        saveDesk: "/shop/desk/saveDesk",
+        getDeskById: "/shop/desk/getDeskById",
+        updateDesk: "/shop/desk/updateDesk",
+        deleteDesk: "/shop/desk/deleteDesk",
+        getAllDeskList: "/shop/desk/getAllDeskList"
 
     }
 

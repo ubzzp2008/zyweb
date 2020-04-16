@@ -1,20 +1,7 @@
 <template>
   <!--系统管理/菜单管理 -->
   <div class="Customer">
-    <!-- <el-row style="margin-bottom:-10px">
-      <h3>
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-          <el-breadcrumb-item>用户ghahdsahgdasg管理</el-breadcrumb-item>
-        </el-breadcrumb>
-      </h3>
-    </el-row>-->
     <el-row>
-      <!-- <el-card shadow="always"> -->
-      <!-- 查询框 -->
-      <!-- <el-row style="margin-bottom:10px">
-          <span style="font-size:10px;color:red">提示：若需模糊查询，请使用符号*占位</span>
-      </el-row>-->
       <el-row>
         <el-form :inline="true" :model="oUserList">
           <el-form-item label="会员姓名">

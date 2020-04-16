@@ -27,7 +27,7 @@
             <template slot="title">
               <div>
                 <i
-                  class="el-icon-s-goods"
+                  class="el-icon-s-order"
                   style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
                 ></i>
               </div>
@@ -45,7 +45,18 @@
               <span>会员管理</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="4" route="/report">
+          <el-menu-item index="4" route="/goodsList">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-goods"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>商品管理</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="5" route="/report">
             <template slot="title">
               <div>
                 <i
@@ -56,7 +67,7 @@
               <span>统计</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="5" route="/goodsList">
+          <el-menu-item index="6" route="/deskList">
             <template slot="title">
               <div>
                 <i
@@ -64,14 +75,16 @@
                   style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
                 ></i>
               </div>
-              <span>商品管理</span>
+              <span>餐桌配置</span>
             </template>
           </el-menu-item>
         </el-menu>
       </el-header>
 
       <el-main>
-        <router-view style="margin:0px"></router-view>
+        <keep-alive>
+          <router-view style="margin:0px"></router-view>
+        </keep-alive>
       </el-main>
     </el-container>
   </div>

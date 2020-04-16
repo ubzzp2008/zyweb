@@ -1,35 +1,14 @@
 <template>
-  <div class="GoodsList">
+  <div class="DeskList">
     <el-row>
-      <el-row>
-        <el-form :inline="true" :model="searchObj">
-          <el-form-item label="商品编码">
-            <el-input
-              v-model.trim="searchObj.goodsCode"
-              placeholder
-              @keyup.enter.native="fGetGoodsList"
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="商品名称">
-            <el-input
-              v-model.trim="searchObj.goodsName"
-              placeholder
-              @keyup.enter.native="fGetGoodsList"
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" size="small" @click="fGetGoodsList">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-row>
       <!-- 操作按钮 -->
       <el-row style="margin-bottom:5px">
-        <el-button type="primary" size="small" style="float:left" @click="addGoods">新增</el-button>
-        <el-button type="warning" size="small" style="float:left" @click="editGoods">编辑</el-button>
-        <el-button type="danger" size="small" style="float:left" @click="delGoods">删除</el-button>
+        <el-button type="primary" size="small" style="float:left" @click="addDesk">新增</el-button>
+        <el-button type="warning" size="small" style="float:left" @click="editDesk">编辑</el-button>
+        <el-button type="danger" size="small" style="float:left" @click="delDesk">删除</el-button>
       </el-row>
       <el-table
-        :data="goodsList"
+        :data="deskList"
         border
         style="width: 100%;"
         max-height="560"
@@ -38,19 +17,8 @@
       >
         <el-table-column type="selection" width="55" align="center"></el-table-column>
         <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-        <el-table-column prop="goodsCode" label="商品编码" :show-overflow-tooltip="true" align="center"></el-table-column>
-        <el-table-column prop="goodsName" label="商品名称" :show-overflow-tooltip="true" align="center"></el-table-column>
-        <el-table-column prop="unit" label="单位" align="center" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="price" label="单价(元)" align="center">
-          <template slot-scope="scope">
-            <span>{{scope.row.price? parseFloat(scope.row.price).toFixed(2):0.00.toFixed(2)}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="disPrice" label="会员价(元)" align="center">
-          <template slot-scope="scope">
-            <span>{{scope.row.disPrice? parseFloat(scope.row.disPrice).toFixed(2):0.00.toFixed(2)}}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="deskCode" label="编号" :show-overflow-tooltip="true" align="center"></el-table-column>
+        <el-table-column prop="deskName" label="名称" :show-overflow-tooltip="true" align="center"></el-table-column>
         <el-table-column prop="sortnum" label="排序号" align="center"></el-table-column>
       </el-table>
       <el-pagination
@@ -61,11 +29,10 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
-      <!-- </el-card> -->
     </el-row>
     <!-- 新增 -->
     <el-dialog
-      title="新增商品"
+      title="新增"
       :visible.sync="addVisible"
       width="60%"
       top="5vh"
@@ -75,39 +42,11 @@
       v-dialogDrag
     >
       <el-form :model="ruleForm" ref="ruleForm" :rules="rules" label-width="120px">
-        <el-form-item label="商品编码:" prop="goodsCode">
-          <el-input v-model="ruleForm.goodsCode" autocomplete="off"></el-input>
+        <el-form-item label="编号:" prop="deskCode">
+          <el-input v-model="ruleForm.deskCode" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="商品名称:" prop="goodsName">
-          <el-input v-model="ruleForm.goodsName" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="单位:" prop="unit">
-          <el-select v-model="ruleForm.unit" clearable>
-            <el-option
-              v-for="item in unitEnum"
-              :key="item.code"
-              :value="item.code"
-              :label="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="单价:" prop="price">
-          <el-input-number
-            v-model="ruleForm.price"
-            :precision="2"
-            :step="0.1"
-            :min="0"
-            :max="99999"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="会员价:" prop="disPrice">
-          <el-input-number
-            v-model="ruleForm.disPrice"
-            :precision="2"
-            :step="0.1"
-            :min="0"
-            :max="99999"
-          ></el-input-number>
+        <el-form-item label="名称:" prop="deskName">
+          <el-input v-model="ruleForm.deskName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="排序号:" prop="sortnum">
           <el-input v-model.number="ruleForm.sortnum" autocomplete="off"></el-input>
@@ -121,7 +60,7 @@
 
     <!-- 编辑 -->
     <el-dialog
-      title="编辑商品"
+      title="编辑"
       :visible.sync="editVisible"
       width="60%"
       top="5vh"
@@ -131,40 +70,11 @@
       v-dialogDrag
     >
       <el-form :model="editForm" ref="editForm" :rules="rules" label-width="120px">
-        <el-form-item label="商品编码:" prop="goodsCode">
-          <span>{{editForm.goodsCode}}</span>
-          <!--  <el-input v-model="editForm.goodsCode" autocomplete="off"></el-input> -->
+        <el-form-item label="编号:" prop="deskCode">
+          <span>{{editForm.deskCode}}</span>
         </el-form-item>
-        <el-form-item label="商品名称:" prop="goodsName">
-          <el-input v-model="editForm.goodsName" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="单位:" prop="unit">
-          <el-select v-model="editForm.unit" clearable>
-            <el-option
-              v-for="item in unitEnum"
-              :key="item.code"
-              :value="item.code"
-              :label="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="单价:" prop="price">
-          <el-input-number
-            v-model="editForm.price"
-            :precision="2"
-            :step="0.1"
-            :min="0"
-            :max="99999"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="会员价:" prop="disPrice">
-          <el-input-number
-            v-model="editForm.disPrice"
-            :precision="2"
-            :step="0.1"
-            :min="0"
-            :max="99999"
-          ></el-input-number>
+        <el-form-item label="名称:" prop="deskName">
+          <el-input v-model="editForm.deskName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="排序号:" prop="sortnum">
           <el-input v-model.number="editForm.sortnum" autocomplete="off"></el-input>
@@ -178,10 +88,9 @@
   </div>
 </template>
 
-
 <script>
 export default {
-  name: "GoodsList",
+  name: "DeskList",
   data: function() {
     var seqCheck = (rule, value, callback) => {
       if (!/^[1-9]\d*$/.test(value)) {
@@ -191,7 +100,7 @@ export default {
       }
     };
     return {
-      goodsList: [],
+      deskList: [],
       pageNum: 1, //分页数
       pageSize: 20, //每页数据
       total: null, //总页数
@@ -199,32 +108,15 @@ export default {
       editVisible: false,
       editForm: {},
       selectRow: [], //设置选中行
-      searchObj: {
-        goodsCode: null,
-        goodsName: null
-      },
-      unitEnum: this.$store.state.unitEnum, //单位列表
       //验证列表
       ruleForm: {
-        goodsCode: null,
-        goodsName: null,
-        unit: "份",
-        price: null,
-        disPrice: null,
+        deskCode: null,
+        deskName: null,
         sortnum: null
       },
       rules: {
-        goodsCode: [
-          { required: true, message: "请输入商品编码", trigger: "blur" }
-        ],
-        goodsName: [
-          { required: true, message: "请输入商品名称", trigger: "blur" }
-        ],
-        unit: [{ required: true, message: "请选择单位", trigger: "blur" }],
-        price: [{ required: true, message: "请填写单价", trigger: "blur" }],
-        disPrice: [
-          { required: true, message: "请填写会员价", trigger: "blur" }
-        ],
+        deskCode: [{ required: true, message: "请输入编号", trigger: "blur" }],
+        deskName: [{ required: true, message: "请输入名称", trigger: "blur" }],
         sortnum: [
           { required: true, message: "请输入显示顺序", trigger: "blur" },
           { validator: seqCheck, trigger: ["blur", "change"] }
@@ -234,7 +126,7 @@ export default {
   },
 
   mounted() {
-    this.fGetGoodsList();
+    this.fGetDeskList();
   },
   watch: {
     allSelect(data) {
@@ -251,33 +143,31 @@ export default {
     handleSizeChange: function(pageSize) {
       let _this = this;
       _this.pageSize = pageSize;
-      _this.fGetGoodsList();
+      _this.fGetDeskList();
     },
     //页数切换
     handleCurrentChange: function(pageNum) {
       let _this = this;
       _this.pageNum = pageNum;
-      _this.fGetGoodsList();
+      _this.fGetDeskList();
     },
     //多选框
     handleSelectionChange: function(data) {
       this.allSelect = data;
     },
     //获取table数据
-    fGetGoodsList: function() {
+    fGetDeskList: function() {
       let _this = this;
       window.master.fLoadingOpen();
       this.axios
-        .post(window.sHost + window.sUrl.shop.queryGoodsList, {
+        .post(window.sHost + window.sUrl.shop.queryDeskList, {
           pageNum: _this.pageNum,
-          pageSize: _this.pageSize,
-          goodsCode: window.master.strReplace(_this.searchObj.goodsCode),
-          goodsName: window.master.strReplace(_this.searchObj.goodsName)
+          pageSize: _this.pageSize
         })
         .then(response => {
           window.master.fLoadingClose();
           if (response.data.success) {
-            _this.goodsList = response.data.obj.list;
+            _this.deskList = response.data.obj.list;
             _this.total = response.data.obj.total;
           } else {
             window.master.fErrorMes(response.data.msg);
@@ -296,7 +186,7 @@ export default {
           window.master.fLoadingOpen();
           _this.axios
             .post(
-              window.sHost + window.sUrl.shop.saveGoods,
+              window.sHost + window.sUrl.shop.saveDesk,
               JSON.parse(JSON.stringify(_this.$refs[formName].model))
             )
             .then(response => {
@@ -304,7 +194,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
-                _this.fGetGoodsList();
+                _this.fGetDeskList();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -326,7 +216,7 @@ export default {
           window.master.fLoadingOpen();
           _this.axios
             .post(
-              window.sHost + window.sUrl.shop.updateGoods,
+              window.sHost + window.sUrl.shop.updateDesk,
               JSON.parse(JSON.stringify(_this.$refs[formName].model))
             )
             .then(response => {
@@ -334,7 +224,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.editVisible = false;
-                _this.fGetGoodsList();
+                _this.fGetDeskList();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -356,12 +246,12 @@ export default {
       this.$refs[formName].resetFields();
     },
     //新增
-    addGoods: function() {
+    addDesk: function() {
       this.addVisible = true;
     },
 
     //编辑
-    editGoods: function() {
+    editDesk: function() {
       let _this = this;
       if (
         _this.allSelect === undefined ||
@@ -373,7 +263,7 @@ export default {
         _this.axios
           .get(
             window.sHost +
-              window.sUrl.shop.getGoodsById +
+              window.sUrl.shop.getDeskById +
               "?id=" +
               _this.allSelect[0].id
           )
@@ -385,7 +275,7 @@ export default {
       }
     },
     //删除
-    delGoods: function() {
+    delDesk: function() {
       let _this = this;
       if (
         _this.allSelect === undefined ||
@@ -395,7 +285,7 @@ export default {
         window.master.fWarningMes(this.$store.state.sOnlySelectOneMes);
       } else {
         _this
-          .$confirm("确定删除该商品?", "提示", {
+          .$confirm("确定删除选中的数据?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",
@@ -408,13 +298,13 @@ export default {
               window.master.fLoadingOpen();
               _this.axios
                 .post(
-                  window.sHost + window.sUrl.shop.deleteGoods,
+                  window.sHost + window.sUrl.shop.deleteDesk,
                   "id=" + _this.allSelect[0].id
                 )
                 .then(response => {
                   window.master.fLoadingClose();
                   if (response.data.success) {
-                    _this.fGetGoodsList();
+                    _this.fGetDeskList();
                     window.master.fSuccessMes(response.data.msg);
                   } else {
                     window.master.fErrorMes(response.data.msg);
