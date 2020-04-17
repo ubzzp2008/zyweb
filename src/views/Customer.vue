@@ -8,11 +8,17 @@
             <el-input
               v-model.trim="oUserList.userName"
               placeholder
+              clearable
               @keyup.enter.native="fGetUserList"
             ></el-input>
           </el-form-item>
           <el-form-item label="联系电话">
-            <el-input v-model.trim="oUserList.phone" placeholder @keyup.enter.native="fGetUserList"></el-input>
+            <el-input
+              v-model.trim="oUserList.phone"
+              placeholder
+              clearable
+              @keyup.enter.native="fGetUserList"
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" size="small" @click="fGetUserList">查询</el-button>

@@ -53,9 +53,9 @@ const router = new Router({
           component: () => import('./views/Customer.vue')
         },
         {
-          path: '/report',
-          name: 'Report',
-          component: () => import('./views/Report.vue')
+          path: '/orderReport',
+          name: 'OrderReport',
+          component: () => import('./views/OrderReport.vue')
         },
         {
           path: '/goodsList',
@@ -66,6 +66,11 @@ const router = new Router({
           path: '/deskList',
           name: 'DeskList',
           component: () => import('./views/DeskList.vue')
+        },
+        {
+          path: '/refresh',
+          name: 'Refresh',
+          component: () => import('./views/Refresh.vue')
         }
       ]
     }

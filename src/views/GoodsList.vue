@@ -7,6 +7,7 @@
             <el-input
               v-model.trim="searchObj.goodsCode"
               placeholder
+              clearable
               @keyup.enter.native="fGetGoodsList"
             ></el-input>
           </el-form-item>
@@ -14,6 +15,7 @@
             <el-input
               v-model.trim="searchObj.goodsName"
               placeholder
+              clearable
               @keyup.enter.native="fGetGoodsList"
             ></el-input>
           </el-form-item>

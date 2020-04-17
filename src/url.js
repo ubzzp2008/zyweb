@@ -24,10 +24,17 @@ window.sUrl = {
         getDeskById: "/shop/desk/getDeskById",
         updateDesk: "/shop/desk/updateDesk",
         deleteDesk: "/shop/desk/deleteDesk",
-        getAllDeskList: "/shop/desk/getAllDeskList",
-        //点餐--挂单
+        getUseableDeskList: "/shop/desk/getUseableDeskList",
+        //挂单
         saveOrder: "/shop/order/saveOrder",
-        getOrderDeskList: "/shop/order/getOrderDeskList"
+        getOrderDeskList: "/shop/order/getOrderDeskList",
+        getOrderByDeskId: "/shop/order/getOrderByDeskId",
+        deleteOrderInfo: "/shop/order/deleteOrderInfo",
+        cancleOrder: "/shop/order/cancleOrder",
+
+        saveOrderReportBatch: "/shop/report/saveOrderReportBatch",
+        queryOrderReportList: "/shop/report/queryOrderReportList"
+
 
     }
 

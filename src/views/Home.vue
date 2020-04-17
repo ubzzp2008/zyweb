@@ -56,7 +56,7 @@
               <span>商品管理</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="5" route="/report">
+          <el-menu-item index="5" route="/orderReport">
             <template slot="title">
               <div>
                 <i
@@ -82,9 +82,9 @@
       </el-header>
 
       <el-main>
-        <keep-alive>
-          <router-view style="margin:0px"></router-view>
-        </keep-alive>
+        <!-- <keep-alive> -->
+        <router-view style="margin:0px"></router-view>
+        <!-- </keep-alive> -->
       </el-main>
     </el-container>
   </div>

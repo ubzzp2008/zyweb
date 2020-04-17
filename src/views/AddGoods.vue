@@ -38,24 +38,21 @@
                       maxlength="11"
                       placeholder="请输入会员手机号"
                       @change="checkCustomer"
+                      :disabled="custInput"
                     ></el-input>
                   </el-form-item>
                 </el-form>
               </div>
             </el-row>
             <el-row style="margin: 10px;line-height: 40px;">
-              <span>总金额: ￥{{parseFloat(hjFee).toFixed(2)}}</span>
-              <span
-                style="padding-left: 30px;"
-                v-if="cusPhone!=null"
-              >会员金额：￥{{parseFloat(disFee).toFixed(2)}}</span>
+              <span>总金额: ￥{{parseFloat(totalMoney).toFixed(2)}}</span>
               <span style="float:right;margin-right:20px">
                 <span
                   style="padding-right: 30px;color:red;font-weight: 800;"
-                >{{custName}}{{cusPhone}}</span>
+                >{{custName}}</span>
                 <el-button type="danger" size="medium" @click="delAllSelected">清空</el-button>
                 <el-button type="warning" size="medium" @click="toWaitOrder">挂单</el-button>
-                <el-button type="success" size="medium" @click="toSaveOrder">结账</el-button>
+                <el-button type="success" size="medium" @click="finishOrder">结账</el-button>
               </span>
             </el-row>
           </el-card>
@@ -90,20 +87,9 @@
                 ></el-input-number>
               </template>
             </el-table-column>
-            <el-table-column label="金额" prop="totalMoney" align="center" width="110">
+            <el-table-column label="金额" prop="money" align="center" width="110">
               <template slot-scope="scope">
-                <span>{{scope.row.totalMoney? parseFloat(scope.row.totalMoney).toFixed(2):0.00.toFixed(2)}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              label="会员价"
-              prop="disMoney"
-              align="center"
-              width="110"
-              v-if="cusPhone!=null"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.disMoney? parseFloat(scope.row.disMoney).toFixed(2):0.00.toFixed(2)}}</span>
+                <span>{{scope.row.money? parseFloat(scope.row.money).toFixed(2):0.00.toFixed(2)}}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" width="100">
@@ -243,15 +229,13 @@ export default {
       }
     };
     return {
-      /*  phoneNumber: null,
-      deskNo: null, */
-      hjFee: 0.0,
-      disFee: 0.0,
+      totalMoney: 0.0,
       allDeskData: [],
       allGoodsData: [],
       selectedGoods: [], //已选择商品的列表
+      custInput: false,
       custName: null,
-      cusPhone: null,
+      custPhone: null,
       dkId: null,
       dkName: null,
       ruleForm: {
@@ -289,6 +273,17 @@ export default {
           return;
         }
       });
+    },
+    //监听是否选择商品，若已经选择，则禁用会员手机输入
+    selectedGoods(arr) {
+      let _this = this;
+      if (arr.length > 0) {
+        _this.custInput = true;
+      } else {
+        _this.custInput = false;
+      }
+      //选择的商品发生变化时，统计总金额
+      _this.sumMoney();
     }
   },
   methods: {
@@ -296,7 +291,7 @@ export default {
       let _this = this;
       if (!val) {
         _this.custName = null;
-        _this.cusPhone = null;
+        _this.custPhone = null;
         return;
       }
       _this.$refs["ruleForm"].validate(valid => {
@@ -311,17 +306,17 @@ export default {
             .then(response => {
               if (response.data.success) {
                 _this.custName = "会员：" + response.data.obj.userName;
-                _this.cusPhone = response.data.obj.phone;
+                _this.custPhone = response.data.obj.phone;
               } else {
                 _this.custName = null;
-                _this.cusPhone = null;
+                _this.custPhone = null;
                 window.master.fErrorMes(response.data.msg);
               }
             })
             .catch(() => {});
         } else {
           _this.custName = null;
-          _this.cusPhone = null;
+          _this.custPhone = null;
           return false;
         }
       });
@@ -349,7 +344,7 @@ export default {
       _this
         .axios({
           method: "get",
-          url: window.sHost + window.sUrl.shop.getAllDeskList
+          url: window.sHost + window.sUrl.shop.getUseableDeskList
         })
         .then(function(response) {
           let data = response.data;
@@ -362,45 +357,41 @@ export default {
     },
     //添加商品
     goodsClick: function(obj) {
-      this.selectedGoods.push({
-        sid: obj.id,
-        goodsCode: obj.goodsCode,
-        goodsName: obj.goodsName,
-        num: 1,
-        unit: obj.unit,
-        price: obj.price,
-        disPrice: obj.disPrice,
-        totalMoney: obj.price,
-        disMoney: obj.disPrice
-      });
-      this.sumMoney();
+      let gd = {};
+      gd.id = obj.id;
+      gd.goodsCode = obj.goodsCode;
+      gd.goodsName = obj.goodsName;
+      gd.num = 1;
+      gd.unit = obj.unit;
+
+      if (this.custPhone != null) {
+        gd.price = obj.disPrice;
+        gd.money = obj.disPrice;
+      } else {
+        gd.price = obj.price;
+        gd.money = obj.price;
+      }
+      this.selectedGoods.push(gd);
     },
     //删除商品
     delGoods: function(scope) {
       this.selectedGoods.splice(scope.$index, 1);
-      this.sumMoney();
     },
     //数量变化事件
     numChange: function(val, scope) {
-      this.selectedGoods[scope.$index].totalMoney = parseFloat(
+      this.selectedGoods[scope.$index].money = parseFloat(
         scope.row.price * val
       ).toFixed(2);
-      this.selectedGoods[scope.$index].disMoney = parseFloat(
-        scope.row.disPrice * val
-      ).toFixed(2);
+      //商品数量变化时，重新统计总金额
       this.sumMoney();
     },
     //合计金额
     sumMoney: function() {
       let _this = this;
-      _this.hjFee = 0;
-      _this.disFee = 0;
+      _this.totalMoney = 0;
       this.selectedGoods.forEach(row => {
-        _this.hjFee = (
-          parseFloat(_this.hjFee) + parseFloat(row.price * row.num)
-        ).toFixed(2);
-        _this.disFee = (
-          parseFloat(_this.disFee) + parseFloat(row.disPrice * row.num)
+        _this.totalMoney = (
+          parseFloat(_this.totalMoney) + parseFloat(row.price * row.num)
         ).toFixed(2);
       });
     },
@@ -420,15 +411,52 @@ export default {
       }).then(
         () => {
           _this.selectedGoods = [];
-          _this.sumMoney();
         },
         () => {}
       );
     },
     //结账操作
-    toSaveOrder: function() {
-      console.log(this.selectedGoods);
+    finishOrder: function() {
+      let _this = this;
+      if (_this.selectedGoods.length === 0) {
+        window.master.fWarningMes("没有任何商品，无需结账！");
+      } else {
+        this.$confirm("确定结账?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          center: true,
+          closeOnPressEscape: false,
+          closeOnClickModal: false
+        }).then(
+          () => {
+            window.master.fLoadingOpen();
+            _this
+              .axios({
+                method: "post",
+                url: window.sHost + window.sUrl.shop.saveOrderReportBatch,
+                data: _this.selectedGoods
+              })
+              .then(function(response) {
+                window.master.fLoadingClose();
+                let data = response.data;
+                if (data.success) {
+                  _this.ruleForm.deskNo = null;
+                  _this.ruleForm.phoneNumber = null;
+                  _this.custName = null;
+                  _this.custPhone = null;
+                  _this.selectedGoods = [];
+                  window.master.fSuccessMes(data.msg);
+                } else {
+                  window.master.fErrorMes(data.msg);
+                }
+              });
+          },
+          () => {}
+        );
+      }
     },
+    //挂单操作
     toWaitOrder: function() {
       let _this = this;
       if (_this.selectedGoods.length === 0) {
@@ -442,8 +470,6 @@ export default {
       _this.$refs["ruleForm"].model.deskCode = _this.ruleForm.deskNo;
       _this.$refs["ruleForm"].model.deskId = _this.dkId;
       _this.$refs["ruleForm"].model.deskName = _this.dkName;
-      _this.$refs["ruleForm"].model.custName = _this.custName;
-      _this.$refs["ruleForm"].model.custPhone = _this.cusPhone;
       _this
         .$confirm("确定挂单【" + _this.dkName + "】?", "提示", {
           confirmButtonText: "确定",
@@ -469,9 +495,9 @@ export default {
                   _this.ruleForm.deskNo = null;
                   _this.ruleForm.phoneNumber = null;
                   _this.custName = null;
-                  _this.cusPhone = null;
+                  _this.custPhone = null;
                   _this.selectedGoods = [];
-                  _this.sumMoney();
+                  // _this.sumMoney();
                   window.master.fSuccessMes(data.msg);
                 } else {
                   window.master.fErrorMes(data.msg);
