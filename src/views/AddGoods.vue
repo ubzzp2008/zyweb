@@ -23,11 +23,10 @@
               <div style="padding: 5px;text-align:center;">
                 <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm">
                   <el-form-item label="桌号：" prop="deskNo">
-                    <!-- <el-input v-model.trim="ruleForm.deskNo" placeholder="请输入桌号"></el-input> -->
                     <el-select v-model="ruleForm.deskNo" clearable>
                       <el-option
                         v-for="item in allDeskData"
-                        :key="item.deskCode"
+                        :key="item.id"
                         :value="item.deskCode"
                         :label="item.deskName"
                       ></el-option>
@@ -46,12 +45,17 @@
             </el-row>
             <el-row style="margin: 10px;line-height: 40px;">
               <span>总金额: ￥{{parseFloat(hjFee).toFixed(2)}}</span>
-              <span style="padding-left: 30px;">会员金额：￥{{parseFloat(disFee).toFixed(2)}}</span>
+              <span
+                style="padding-left: 30px;"
+                v-if="cusPhone!=null"
+              >会员金额：￥{{parseFloat(disFee).toFixed(2)}}</span>
               <span style="float:right;margin-right:20px">
-                <span style="padding-right: 30px;color:red;font-weight: 800;">{{custName}}</span>
-                <el-button type="danger" size="medium" @click="delAllSelected()">清空</el-button>
-                <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
-                <el-button type="success" size="medium" @click="toSaveOrder()">结账</el-button>
+                <span
+                  style="padding-right: 30px;color:red;font-weight: 800;"
+                >{{custName}}{{cusPhone}}</span>
+                <el-button type="danger" size="medium" @click="delAllSelected">清空</el-button>
+                <el-button type="warning" size="medium" @click="toWaitOrder">挂单</el-button>
+                <el-button type="success" size="medium" @click="toSaveOrder">结账</el-button>
               </span>
             </el-row>
           </el-card>
@@ -91,7 +95,13 @@
                 <span>{{scope.row.totalMoney? parseFloat(scope.row.totalMoney).toFixed(2):0.00.toFixed(2)}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="会员价" prop="disMoney" align="center" width="110">
+            <el-table-column
+              label="会员价"
+              prop="disMoney"
+              align="center"
+              width="110"
+              v-if="cusPhone!=null"
+            >
               <template slot-scope="scope">
                 <span>{{scope.row.disMoney? parseFloat(scope.row.disMoney).toFixed(2):0.00.toFixed(2)}}</span>
               </template>
@@ -233,14 +243,17 @@ export default {
       }
     };
     return {
-      phoneNumber: null,
-      deskNo: null,
+      /*  phoneNumber: null,
+      deskNo: null, */
       hjFee: 0.0,
       disFee: 0.0,
       allDeskData: [],
       allGoodsData: [],
       selectedGoods: [], //已选择商品的列表
       custName: null,
+      cusPhone: null,
+      dkId: null,
+      dkName: null,
       ruleForm: {
         phoneNumber: null,
         deskNo: null
@@ -258,10 +271,34 @@ export default {
     this.getAllGoodsList();
     this.getAllDeskList();
   },
-  watch: {},
+  watch: {
+    "ruleForm.deskNo"(val) {
+      let _this = this;
+      if (_this.allDeskData.length == 0) {
+        return;
+      }
+      if (val == null || val == "") {
+        _this.dkId = null;
+        _this.dkName = null;
+        return;
+      }
+      _this.allDeskData.forEach(item => {
+        if (item.deskCode == val) {
+          _this.dkId = item.id;
+          _this.dkName = item.deskName;
+          return;
+        }
+      });
+    }
+  },
   methods: {
     checkCustomer: function(val) {
       let _this = this;
+      if (!val) {
+        _this.custName = null;
+        _this.cusPhone = null;
+        return;
+      }
       _this.$refs["ruleForm"].validate(valid => {
         if (valid) {
           _this.axios
@@ -274,14 +311,17 @@ export default {
             .then(response => {
               if (response.data.success) {
                 _this.custName = "会员：" + response.data.obj.userName;
+                _this.cusPhone = response.data.obj.phone;
               } else {
                 _this.custName = null;
+                _this.cusPhone = null;
                 window.master.fErrorMes(response.data.msg);
               }
             })
             .catch(() => {});
         } else {
           _this.custName = null;
+          _this.cusPhone = null;
           return false;
         }
       });
@@ -303,7 +343,7 @@ export default {
           }
         });
     },
-    //获取所有商品
+    //获取所有桌号
     getAllDeskList: function() {
       let _this = this;
       _this
@@ -324,8 +364,10 @@ export default {
     goodsClick: function(obj) {
       this.selectedGoods.push({
         sid: obj.id,
+        goodsCode: obj.goodsCode,
         goodsName: obj.goodsName,
         num: 1,
+        unit: obj.unit,
         price: obj.price,
         disPrice: obj.disPrice,
         totalMoney: obj.price,
@@ -386,6 +428,60 @@ export default {
     //结账操作
     toSaveOrder: function() {
       console.log(this.selectedGoods);
+    },
+    toWaitOrder: function() {
+      let _this = this;
+      if (_this.selectedGoods.length === 0) {
+        return;
+      }
+      if (!_this.ruleForm.deskNo) {
+        window.master.fErrorMes("请选择桌号");
+        return;
+      }
+      _this.$refs["ruleForm"].model.itemList = _this.selectedGoods;
+      _this.$refs["ruleForm"].model.deskCode = _this.ruleForm.deskNo;
+      _this.$refs["ruleForm"].model.deskId = _this.dkId;
+      _this.$refs["ruleForm"].model.deskName = _this.dkName;
+      _this.$refs["ruleForm"].model.custName = _this.custName;
+      _this.$refs["ruleForm"].model.custPhone = _this.cusPhone;
+      _this
+        .$confirm("确定挂单【" + _this.dkName + "】?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+          center: true,
+          closeOnPressEscape: false,
+          closeOnClickModal: false
+        })
+        .then(
+          () => {
+            window.master.fLoadingOpen();
+            _this
+              .axios({
+                method: "post",
+                url: window.sHost + window.sUrl.shop.saveOrder,
+                data: _this.$refs["ruleForm"].model
+              })
+              .then(function(response) {
+                window.master.fLoadingClose();
+                let data = response.data;
+                if (data.success) {
+                  _this.ruleForm.deskNo = null;
+                  _this.ruleForm.phoneNumber = null;
+                  _this.custName = null;
+                  _this.cusPhone = null;
+                  _this.selectedGoods = [];
+                  _this.sumMoney();
+                  window.master.fSuccessMes(data.msg);
+                } else {
+                  window.master.fErrorMes(data.msg);
+                }
+              });
+          },
+          () => {
+            window.master.fLoadingClose();
+          }
+        );
     }
   }
 };

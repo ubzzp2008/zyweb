@@ -310,10 +310,9 @@ export default {
                     window.master.fErrorMes(response.data.msg);
                   }
                 })
-                .catch();
-            },
-            () => {}
-          );
+                .catch(()=>{});
+            }
+          ).catch(()=>{});
       }
     }
   }

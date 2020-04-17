@@ -1,110 +1,85 @@
 <template>
   <div class="OrderList">
-    <el-tabs type="border-card" tab-position="left">
-      <el-tab-pane :label="item.name" v-for="item in deskList" :key="item.id">
-        <el-row :gutter="20">
-          <el-col :span="14">
-            <div>
-              <el-card :body-style="{ padding: '0px' }">
-                <el-row>
-                  <div style="padding: 5px;text-align:center;">
-                    <el-form :inline="true" :model="ruleForm" :rules="rules" ref="ruleForm">
-                      <el-form-item label="桌号：" prop="deskNo">
-                        <el-input v-model.trim="ruleForm.deskNo" placeholder="请输入桌号"></el-input>
-                      </el-form-item>
-                      <el-form-item label="会员手机号：" prop="phoneNumber">
-                        <el-input
-                          v-model.trim="ruleForm.phoneNumber"
-                          maxlength="11"
-                          placeholder="请输入会员手机号"
-                          @change="checkCustomer"
-                        ></el-input>
-                      </el-form-item>
-                    </el-form>
-                  </div>
-                </el-row>
-                <el-row style="margin: 10px;line-height: 40px;">
-                  <span>总金额: ￥{{parseFloat(hjFee).toFixed(2)}}</span>
-                  <span style="padding-left: 30px;">会员金额：￥{{parseFloat(disFee).toFixed(2)}}</span>
-                  <span style="float:right;margin-right:20px">
-                    <span style="padding-right: 30px;color:red;font-weight: 800;">{{custName}}</span>
-                    <el-button type="danger" size="medium" @click="delAllSelected()">清空</el-button>
-                    <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
-                    <el-button type="success" size="medium" @click="toSaveOrder()">结账</el-button>
-                  </span>
-                </el-row>
-              </el-card>
-              <el-table
-                :data="selectedGoods"
-                border
-                style="width: 100%;max-height:500px;"
-                ref="clickTable"
-              >
-                <!-- <el-table-column type="selection" width="55" align="center"></el-table-column> -->
-                <!-- <el-table-column type="index" label="序号" width="50" align="center"></el-table-column> -->
-                <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
-                <el-table-column
-                  prop="goodsName"
-                  label="商品名称"
-                  :show-overflow-tooltip="true"
-                  align="center"
-                ></el-table-column>
-                <el-table-column label="单价" width="100" prop="price" align="center">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.price? parseFloat(scope.row.price).toFixed(2):0.00.toFixed(2)}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="数量" prop="num" width="170" align="center">
-                  <template slot-scope="scope">
-                    <!-- <el-input-number >{{scope.row.num? parseFloat(scope.row.num).toFixed(2):0.00.toFixed(2)}}</el-input-number> -->
-                    <el-input-number
-                      v-model="scope.row.num"
-                      @change="(val)=>{numChange(val,scope)}"
-                      :min="1"
-                      :max="999999"
-                    ></el-input-number>
-                  </template>
-                </el-table-column>
-                <el-table-column label="金额" prop="totalMoney" align="center" width="110">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.totalMoney? parseFloat(scope.row.totalMoney).toFixed(2):0.00.toFixed(2)}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="会员价" prop="disMoney" align="center" width="110">
-                  <template slot-scope="scope">
-                    <span>{{scope.row.disMoney? parseFloat(scope.row.disMoney).toFixed(2):0.00.toFixed(2)}}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="操作" align="center" width="100">
-                  <template slot-scope="scope">
-                    <el-button type="danger" size="mini" @click="delGoods(scope)">删除</el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </div>
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <el-row style="margin-bottom:10px;text-align: center;">
+          <span style="font-size:16px;">待结账桌号</span>
+        </el-row>
+        <el-row v-for="item in orderDeskList" :key="item.id" style="margin-bottom: 10px;">
+          <el-col :span="16">
+            <el-card shadow="hover" class="card_class" @click.native="getOrderGoods(item.deskCode)">
+              <div style="padding: 10px 5px;text-align: center;">
+                <span>{{item.deskName}}</span>
+              </div>
+            </el-card>
           </el-col>
-          <el-col :span="10">
-            <!-- <div> -->
-            <el-row style="margin-bottom:10px">
-              <span style="font-size:16px;">常用菜单</span>
-            </el-row>
-            <el-row>
-              <el-col :span="7" :offset="1" v-for="item in allGoodsData" :key="item.id">
-                <el-card shadow="hover" class="card_class">
-                  <div style="padding: 5px;text-align:center;" @click="goodsClick(item)">
-                    <span>{{item.goodsName}}</span>
-                    <span style="color: #409eff;">￥{{parseFloat(item.price).toFixed(2)}}</span>
-                    <div class="bottom clearfix">
-                      <time class="huiyuan">会员价￥{{parseFloat(item.disPrice).toFixed(2)}}</time>
-                    </div>
-                  </div>
-                </el-card>
-              </el-col>
-            </el-row>
+          <el-col :span="8" style="padding-left: 10px;">
+            <el-button type="danger" size="medium" style="padding: 12px;">删除</el-button>
           </el-col>
         </el-row>
-      </el-tab-pane>
-    </el-tabs>
+      </el-col>
+      <el-col :span="20">
+        <!-- <div> -->
+
+        <!-- <el-row>
+          <el-card :body-style="{ padding: '0px' }">
+            <el-row style="margin: 10px;line-height: 40px;">
+              <span>总金额: ￥0.00</span>
+              <span style="padding-left: 30px;">会员金额：￥0.00</span>
+              <span style="float:right;margin-right:20px">
+                <el-button type="danger" size="medium" @click="delAllSelected()">清空</el-button>
+                <el-button type="warning" size="medium" @click="delGoods(scope)">挂单</el-button>
+                <el-button type="success" size="medium" @click="toSaveOrder()">结账</el-button>
+              </span>
+            </el-row>
+          </el-card>
+          <el-table
+            :data="selectedGoods"
+            border
+            style="width: 100%;max-height:500px;"
+            ref="clickTable"
+          >
+            <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
+            <el-table-column
+              prop="goodsName"
+              label="商品名称"
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column label="单价" width="100" prop="price" align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.price? parseFloat(scope.row.price).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="数量" prop="num" width="170" align="center">
+              <template slot-scope="scope">
+                <el-input-number
+                  v-model="scope.row.num"
+                  @change="(val)=>{numChange(val,scope)}"
+                  :min="1"
+                  :max="999999"
+                ></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column label="金额" prop="totalMoney" align="center" width="110">
+              <template slot-scope="scope">
+                <span>{{scope.row.totalMoney? parseFloat(scope.row.totalMoney).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="会员价" prop="disMoney" align="center" width="110">
+              <template slot-scope="scope">
+                <span>{{scope.row.disMoney? parseFloat(scope.row.disMoney).toFixed(2):0.00.toFixed(2)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="100">
+              <template slot-scope="scope">
+                <el-button type="danger" size="mini" @click="delGoods(scope)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-row> -->
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -143,22 +118,32 @@ export default {
   name: "OrderList",
   data: function() {
     return {
-      deskList: [
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" },
-        { id: "11", name: "桌号1" }
-      ]
+      orderDeskList: []
     };
   },
-
-  methods: {}
+  mounted() {
+    this.getOrderDeskList();
+  },
+  methods: {
+    getOrderDeskList: function() {
+      let _this = this;
+      _this
+        .axios({
+          method: "get",
+          url: window.sHost + window.sUrl.shop.getOrderDeskList
+        })
+        .then(function(response) {
+          let data = response.data;
+          if (data.success) {
+            _this.orderDeskList = data.obj;
+          } else {
+            window.master.fErrorMes(data.msg);
+          }
+        });
+    },
+    getOrderGoods: function(val) {
+      console.log(val);
+    }
+  }
 };
 </script>
