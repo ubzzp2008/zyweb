@@ -58,6 +58,11 @@ const router = new Router({
           component: () => import('./views/OrderReport.vue')
         },
         {
+          path: '/payReport',
+          name: 'PayReport',
+          component: () => import('./views/PayReport.vue')
+        },
+        {
           path: '/goodsList',
           name: 'GoodsList',
           component: () => import('./views/GoodsList.vue')
@@ -66,6 +71,11 @@ const router = new Router({
           path: '/deskList',
           name: 'DeskList',
           component: () => import('./views/DeskList.vue')
+        },
+        {
+          path: '/summaryReport',
+          name: 'SummaryReport',
+          component: () => import('./views/SummaryReport.vue')
         },
         {
           path: '/refresh',

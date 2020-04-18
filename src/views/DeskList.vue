@@ -11,7 +11,6 @@
         :data="deskList"
         border
         style="width: 100%;"
-        max-height="560"
         ref="clickTable"
         @selection-change="handleSelectionChange"
       >

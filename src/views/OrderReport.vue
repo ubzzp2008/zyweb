@@ -28,7 +28,8 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="fGetOrderReportList">查询</el-button>
+            <el-button type="primary" size="small" @click="fSearch">查询</el-button>
+            <el-button type="primary" size="small" @click="fExport">导出</el-button>
           </el-form-item>
         </el-form>
       </el-row>
@@ -38,13 +39,7 @@
         <el-button type="warning" size="small" style="float:left" @click="editGoods">编辑</el-button>
         <el-button type="danger" size="small" style="float:left" @click="delGoods">删除</el-button>
       </el-row>-->
-      <el-table
-        :data="orderReportList"
-        border
-        style="width: 100%;"
-        max-height="560"
-        ref="clickTable"
-      >
+      <el-table :data="orderReportList" border style="width: 100%;" ref="clickTable">
         <el-table-column type="index" label="序号" width="50" align="center"></el-table-column>
         <el-table-column prop="goodsCode" label="商品编码" :show-overflow-tooltip="true" align="center"></el-table-column>
         <el-table-column prop="goodsName" label="商品名称" :show-overflow-tooltip="true" align="center"></el-table-column>
@@ -109,6 +104,11 @@ export default {
       _this.pageNum = pageNum;
       _this.fGetOrderReportList();
     },
+    fSearch: function() {
+      let _this = this;
+      _this.pageNum = 1;
+      _this.fGetOrderReportList();
+    },
     //获取table数据
     fGetOrderReportList: function() {
       let _this = this;
@@ -133,6 +133,34 @@ export default {
         .catch(() => {
           window.master.fLoadingClose();
         });
+    },
+    //导出
+    fExport: function() {
+      let _this = this;
+      _this
+        .axios({
+          method: "post",
+          url: window.sHost + window.sUrl.shop.exportOrderReportList,
+          data: {
+            goodsCode: window.master.strReplace(_this.searchObj.goodsCode),
+            goodsName: window.master.strReplace(_this.searchObj.goodsName),
+            orderDate: _this.searchObj.orderDate
+          },
+          responseType: "blob"
+        })
+        .then(res => {
+          let a = document.createElement("a");
+          let blob = new Blob([res.data], {
+            type: "application/vnd.ms-excel"
+          });
+          let objectUrl = URL.createObjectURL(blob);
+          a.setAttribute("href", objectUrl);
+          a.setAttribute("download", decodeURI(res.headers["filename"]));
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        })
+        .catch();
     }
   }
 };

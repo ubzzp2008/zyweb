@@ -17,7 +17,7 @@ Vue.use(VueAxios, axios);
 
 // window.sHost = "http://122.112.218.232/demo"; //这里是测试环境中的url
 
-window.sHost = "http://localhost/demo"; //这里是测试环境中的url
+window.sHost = "http://localhost:8112/zyshop"; //这里是测试环境中的url
 
 
 // request拦截器

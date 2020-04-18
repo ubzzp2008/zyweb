@@ -60,11 +60,11 @@
             <template slot="title">
               <div>
                 <i
-                  class="el-icon-s-data"
+                  class="el-icon-menu"
                   style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
                 ></i>
               </div>
-              <span>统计</span>
+              <span>收入明细</span>
             </template>
           </el-menu-item>
           <el-menu-item index="6" route="/deskList">
@@ -76,6 +76,28 @@
                 ></i>
               </div>
               <span>餐桌配置</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="7" route="/payReport">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-shop"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>支出明细</span>
+            </template>
+          </el-menu-item>
+          <el-menu-item index="8" route="/summaryReport">
+            <template slot="title">
+              <div>
+                <i
+                  class="el-icon-s-data"
+                  style="font-size: 45px;margin-top: 10px;margin-right: 20px;"
+                ></i>
+              </div>
+              <span>汇总统计</span>
             </template>
           </el-menu-item>
         </el-menu>

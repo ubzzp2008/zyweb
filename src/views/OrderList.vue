@@ -30,6 +30,7 @@
               <span>桌号: 【{{dkName}}】</span>
               <span style="padding-left: 30px;">总金额：￥{{parseFloat(totalMoney).toFixed(2)}}</span>
               <span style="float:right;margin-right:20px">
+                <el-switch v-model="printFlag" active-text="打印小票" style="margin-right:30px;"></el-switch>
                 <el-button type="success" size="medium" @click="finishOrder()">结账</el-button>
               </span>
             </el-row>
@@ -107,6 +108,7 @@ export default {
     return {
       orderDeskList: [],
       deskGoodsList: [],
+      printFlag: true,
       dkName: "--",
       totalMoney: 0
     };
@@ -235,8 +237,7 @@ export default {
     },
     //结账操作
     finishOrder: function() {
-      window.master.fErrorMes("待完善！");
-      /* let _this = this;
+      let _this = this;
       if (_this.deskGoodsList.length === 0) {
         window.master.fWarningMes("没有任何商品，无需结账！");
       } else {
@@ -253,14 +254,18 @@ export default {
             _this
               .axios({
                 method: "post",
-                url: window.sHost + window.sUrl.shop.saveOrderReportBatch,
+                url: window.sHost + window.sUrl.shop.saveOrderListToReport,
                 data: _this.deskGoodsList
               })
               .then(function(response) {
                 window.master.fLoadingClose();
                 let data = response.data;
                 if (data.success) {
-                  _this.deskGoodsList = [];
+                  if (_this.printFlag) {
+                    //调用打印服务，打印小票
+                    _this.printOrder(_this.deskGoodsList);
+                  }
+                  _this.$router.replace("/refresh");
                   window.master.fSuccessMes(data.msg);
                 } else {
                   window.master.fErrorMes(data.msg);
@@ -269,8 +274,28 @@ export default {
           },
           () => {}
         );
-      } */
+      }
     },
+    //打印小票
+    printOrder: function(arr) {
+      let _this = this;
+      if (arr.length === 0) {
+        return;
+      } else {
+        _this
+          .axios({
+            method: "post",
+            url: window.sHost + window.sUrl.shop.printOrderDetail,
+            data: arr
+          })
+          .then(function(response) {
+            let data = response.data;
+            if (!data.success) {
+              window.master.fErrorMes(data.msg);
+            }
+          });
+      }
+    }
   }
 };
 </script>

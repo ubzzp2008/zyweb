@@ -26,15 +26,26 @@ window.sUrl = {
         deleteDesk: "/shop/desk/deleteDesk",
         getUseableDeskList: "/shop/desk/getUseableDeskList",
         //挂单
-        saveOrder: "/shop/order/saveOrder",
+        saveOrder: "/shop/order/saveOrder",//挂单操作
         getOrderDeskList: "/shop/order/getOrderDeskList",
         getOrderByDeskId: "/shop/order/getOrderByDeskId",
         deleteOrderInfo: "/shop/order/deleteOrderInfo",
         cancleOrder: "/shop/order/cancleOrder",
 
+        saveOrderListToReport: "/shop/report/saveOrderListToReport",//挂单中的结账
         saveOrderReportBatch: "/shop/report/saveOrderReportBatch",
-        queryOrderReportList: "/shop/report/queryOrderReportList"
+        queryOrderReportList: "/shop/report/queryOrderReportList",
+        exportOrderReportList: "/shop/report/exportOrderReportList",
+        queryGoodsReportList: "/shop/report/queryGoodsReportList",
+        queryMoneyReportList: "/shop/report/queryMoneyReportList",
 
+
+        printOrderDetail: "/shop/report/printOrderDetail",
+
+        //支出报表
+        queryPayReportList:"/shop/pay/queryPayReportList",
+        savePayReport:"/shop/pay/savePayReport",
+        deletePayReport:"/shop/pay/deletePayReport",
 
     }
 

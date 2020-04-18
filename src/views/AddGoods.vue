@@ -41,15 +41,16 @@
                       :disabled="custInput"
                     ></el-input>
                   </el-form-item>
+                  <el-form-item>
+                    <el-switch v-model="printFlag" active-text="打印小票"></el-switch>
+                  </el-form-item>
                 </el-form>
               </div>
             </el-row>
             <el-row style="margin: 10px;line-height: 40px;">
               <span>总金额: ￥{{parseFloat(totalMoney).toFixed(2)}}</span>
               <span style="float:right;margin-right:20px">
-                <span
-                  style="padding-right: 30px;color:red;font-weight: 800;"
-                >{{custName}}</span>
+                <span style="padding-right: 30px;color:red;font-weight: 800;">{{custName}}</span>
                 <el-button type="danger" size="medium" @click="delAllSelected">清空</el-button>
                 <el-button type="warning" size="medium" @click="toWaitOrder">挂单</el-button>
                 <el-button type="success" size="medium" @click="finishOrder">结账</el-button>
@@ -102,8 +103,13 @@
       </el-col>
       <el-col :span="10">
         <!-- <div> -->
-        <el-row style="margin-bottom:10px">
+        <el-row style="margin-bottom:10px;text-align: center;">
           <span style="font-size:16px;">常用菜单</span>
+        </el-row>
+        <el-row>
+          <el-col :span="24" v-if="allGoodsData.length===0">
+            <el-card shadow="never" style="text-align: center;padding: 30px;">您还未配置任何的商品</el-card>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="7" :offset="1" v-for="item in allGoodsData" :key="item.id">
@@ -238,6 +244,7 @@ export default {
       custPhone: null,
       dkId: null,
       dkName: null,
+      printFlag: true,
       ruleForm: {
         phoneNumber: null,
         deskNo: null
@@ -441,6 +448,13 @@ export default {
                 window.master.fLoadingClose();
                 let data = response.data;
                 if (data.success) {
+                  if (_this.printFlag) {
+                    //调用打印服务，打印小票
+                    _this.printOrder(_this.selectedGoods);
+                  } else {
+                    //当前账单不打印打印小票，结账完后，恢复默认值，打印小票
+                    _this.printFlag = true;
+                  }
                   _this.ruleForm.deskNo = null;
                   _this.ruleForm.phoneNumber = null;
                   _this.custName = null;
@@ -454,6 +468,26 @@ export default {
           },
           () => {}
         );
+      }
+    },
+    //打印小票
+    printOrder: function(arr) {
+      let _this = this;
+      if (arr.length === 0) {
+        return;
+      } else {
+        _this
+          .axios({
+            method: "post",
+            url: window.sHost + window.sUrl.shop.printOrderDetail,
+            data: arr
+          })
+          .then(function(response) {
+            let data = response.data;
+            if (!data.success) {
+              window.master.fErrorMes(data.msg);
+            }
+          });
       }
     },
     //挂单操作
