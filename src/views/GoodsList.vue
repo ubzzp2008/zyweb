@@ -8,7 +8,7 @@
               v-model.trim="searchObj.goodsCode"
               placeholder
               clearable
-              @keyup.enter.native="fGetGoodsList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item label="商品名称">
@@ -16,11 +16,11 @@
               v-model.trim="searchObj.goodsName"
               placeholder
               clearable
-              @keyup.enter.native="fGetGoodsList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="fGetGoodsList">查询</el-button>
+            <el-button type="primary" size="small" @click="fSearchData">查询</el-button>
           </el-form-item>
         </el-form>
       </el-row>
@@ -57,6 +57,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :current-page="pageNum"
         :page-sizes="[20, 30, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -235,7 +236,7 @@ export default {
   },
 
   mounted() {
-    this.fGetGoodsList();
+    this.fSearchData();
   },
   watch: {
     allSelect(data) {
@@ -263,6 +264,11 @@ export default {
     //多选框
     handleSelectionChange: function(data) {
       this.allSelect = data;
+    },
+    fSearchData: function() {
+      let _this = this;
+      _this.pageNum = 1;
+      _this.fGetGoodsList();
     },
     //获取table数据
     fGetGoodsList: function() {
@@ -305,7 +311,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
-                _this.fGetGoodsList();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -335,7 +341,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.editVisible = false;
-                _this.fGetGoodsList();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -415,7 +421,7 @@ export default {
                 .then(response => {
                   window.master.fLoadingClose();
                   if (response.data.success) {
-                    _this.fGetGoodsList();
+                    _this.fSearchData();
                     window.master.fSuccessMes(response.data.msg);
                   } else {
                     window.master.fErrorMes(response.data.msg);

@@ -23,6 +23,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :current-page="pageNum"
         :page-sizes="[20, 30, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -125,7 +126,7 @@ export default {
   },
 
   mounted() {
-    this.fGetDeskList();
+    this.fSearchData();
   },
   watch: {
     allSelect(data) {
@@ -153,6 +154,11 @@ export default {
     //多选框
     handleSelectionChange: function(data) {
       this.allSelect = data;
+    },
+    fSearchData: function() {
+      let _this = this;
+      _this.pageNum = 1;
+      _this.fGetDeskList();
     },
     //获取table数据
     fGetDeskList: function() {
@@ -193,7 +199,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
-                _this.fGetDeskList();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -223,7 +229,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.editVisible = false;
-                _this.fGetDeskList();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -292,26 +298,25 @@ export default {
             closeOnPressEscape: false,
             closeOnClickModal: false
           })
-          .then(
-            () => {
-              window.master.fLoadingOpen();
-              _this.axios
-                .post(
-                  window.sHost + window.sUrl.shop.deleteDesk,
-                  "id=" + _this.allSelect[0].id
-                )
-                .then(response => {
-                  window.master.fLoadingClose();
-                  if (response.data.success) {
-                    _this.fGetDeskList();
-                    window.master.fSuccessMes(response.data.msg);
-                  } else {
-                    window.master.fErrorMes(response.data.msg);
-                  }
-                })
-                .catch(()=>{});
-            }
-          ).catch(()=>{});
+          .then(() => {
+            window.master.fLoadingOpen();
+            _this.axios
+              .post(
+                window.sHost + window.sUrl.shop.deleteDesk,
+                "id=" + _this.allSelect[0].id
+              )
+              .then(response => {
+                window.master.fLoadingClose();
+                if (response.data.success) {
+                  _this.fSearchData();
+                  window.master.fSuccessMes(response.data.msg);
+                } else {
+                  window.master.fErrorMes(response.data.msg);
+                }
+              })
+              .catch(() => {});
+          })
+          .catch(() => {});
       }
     }
   }

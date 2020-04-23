@@ -14,7 +14,7 @@
                     v-model.trim="searchGoods.goodsCode"
                     placeholder
                     clearable
-                    @keyup.enter.native="fGetGoodsReportList"
+                    @keyup.enter.native="fSearchGoodsData"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称">
@@ -22,11 +22,11 @@
                     v-model.trim="searchGoods.goodsName"
                     placeholder
                     clearable
-                    @keyup.enter.native="fGetGoodsReportList"
+                    @keyup.enter.native="fSearchGoodsData"
                   ></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" size="small" @click="fGetGoodsReportList">查询</el-button>
+                  <el-button type="primary" size="small" @click="fSearchGoodsData">查询</el-button>
                 </el-form-item>
               </el-form>
             </el-row>
@@ -50,6 +50,7 @@
             <el-pagination
               @size-change="goodsSizeChange"
               @current-change="goodsCurrentChange"
+              :current-page="goodsPageNum"
               :page-sizes="[20, 30, 50, 100]"
               :page-size="goodsPageSize"
               layout="total, sizes, prev, pager, next, jumper"
@@ -78,7 +79,7 @@
                   type="primary"
                   style="margin-left:10px;"
                   size="small"
-                  @click="fGetMoneyReportList"
+                  @click="fSearchMoneyData"
                 >查询</el-button>
               </div>
               <!-- <el-form :inline="true">
@@ -128,6 +129,7 @@
             <el-pagination
               @size-change="moneySizeChange"
               @current-change="moneyCurrentChange"
+              :current-page="moneyPageNum"
               :page-sizes="[20, 30, 50, 100]"
               :page-size="moneyPageSize"
               layout="total, sizes, prev, pager, next, jumper"
@@ -178,8 +180,8 @@ export default {
   },
 
   mounted() {
-    this.fGetGoodsReportList();
-    this.fGetMoneyReportList();
+    this.fSearchGoodsData();
+    this.fSearchMoneyData();
   },
   watch: {},
   methods: {
@@ -194,6 +196,11 @@ export default {
     goodsCurrentChange: function(pageNum) {
       let _this = this;
       _this.goodsPageNum = pageNum;
+      _this.fGetGoodsReportList();
+    },
+    fSearchGoodsData: function() {
+      let _this = this;
+      _this.goodsPageNum = 1;
       _this.fGetGoodsReportList();
     },
     fGetGoodsReportList: function() {
@@ -226,6 +233,11 @@ export default {
     moneyCurrentChange: function(pageNum) {
       let _this = this;
       _this.moneyPageNum = pageNum;
+      _this.fGetMoneyReportList();
+    },
+    fSearchMoneyData: function() {
+      let _this = this;
+      _this.moneyPageNum = 1;
       _this.fGetMoneyReportList();
     },
     fGetMoneyReportList: function() {

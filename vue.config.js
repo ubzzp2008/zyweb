@@ -14,10 +14,10 @@ module.exports = {
     css: {
         // 是否使用css分离插件 ExtractTextPlugin
         //extract:false,
-        extract: {
-            filename: "static/css/[name].css",
-            chunkFilename: "static/css/[name].css"
-        },
+        // extract: {
+        //     filename: "static/css/[name].css",
+        //     chunkFilename: "static/css/[name].css"
+        // },
         // 开启 CSS source maps?是否在构建样式地图，false将提高构建速度
         sourceMap: false,
         // css预设器配置项
@@ -49,8 +49,8 @@ module.exports = {
 
         },
         // 启用 CSS modules for all css / pre-processor files.
-        modules: false
-        // requireModuleExtension:false
+        // modules: false
+        requireModuleExtension:true
     },
 
     configureWebpack: { // webpack 配置

@@ -8,7 +8,7 @@
               v-model.trim="searchObj.goodsCode"
               placeholder
               clearable
-              @keyup.enter.native="fGetOrderReportList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item label="商品名称">
@@ -16,7 +16,7 @@
               v-model.trim="searchObj.goodsName"
               placeholder
               clearable
-              @keyup.enter.native="fGetOrderReportList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item label="日期">
@@ -28,7 +28,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="fSearch">查询</el-button>
+            <el-button type="primary" size="small" @click="fSearchData">查询</el-button>
             <el-button type="primary" size="small" @click="fExport">导出</el-button>
           </el-form-item>
         </el-form>
@@ -60,6 +60,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :current-page="pageNum"
         :page-sizes="[20, 30, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -88,7 +89,7 @@ export default {
   },
 
   mounted() {
-    this.fGetOrderReportList();
+    this.fSearchData();
   },
   watch: {},
   methods: {
@@ -104,7 +105,7 @@ export default {
       _this.pageNum = pageNum;
       _this.fGetOrderReportList();
     },
-    fSearch: function() {
+    fSearchData: function() {
       let _this = this;
       _this.pageNum = 1;
       _this.fGetOrderReportList();

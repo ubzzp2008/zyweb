@@ -8,7 +8,7 @@
               v-model.trim="searchObj.goodsName"
               placeholder
               clearable
-              @keyup.enter.native="fGetPayReportList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item label="日期">
@@ -20,7 +20,7 @@
             ></el-date-picker>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="fGetPayReportList">查询</el-button>
+            <el-button type="primary" size="small" @click="fSearchData">查询</el-button>
             <!-- <el-button type="primary" size="small" @click="fExport">导出</el-button> -->
           </el-form-item>
         </el-form>
@@ -51,6 +51,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :current-page="pageNum"
         :page-sizes="[20, 30, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -98,7 +99,6 @@
 </template>
 
 <script>
-//import { isArray } from "util";
 export default {
   name: "PayReport",
   data: function() {
@@ -132,7 +132,7 @@ export default {
   },
 
   mounted() {
-    this.fGetPayReportList();
+    this.fSearchData();
   },
   watch: {
     allSelect(data) {
@@ -155,6 +155,11 @@ export default {
     handleCurrentChange: function(pageNum) {
       let _this = this;
       _this.pageNum = pageNum;
+      _this.fGetPayReportList();
+    },
+    fSearchData:function(){
+       let _this = this;
+      _this.pageNum = 1; 
       _this.fGetPayReportList();
     },
     //多选框
@@ -201,7 +206,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
-                _this.fGetPayReportList();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -253,7 +258,7 @@ export default {
                 .then(response => {
                   window.master.fLoadingClose();
                   if (response.data.success) {
-                    _this.fGetPayReportList();
+                    _this.fSearchData();
                     window.master.fSuccessMes(response.data.msg);
                   } else {
                     window.master.fErrorMes(response.data.msg);

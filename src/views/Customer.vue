@@ -9,7 +9,7 @@
               v-model.trim="oUserList.userName"
               placeholder
               clearable
-              @keyup.enter.native="fGetUserList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item label="联系电话">
@@ -17,11 +17,11 @@
               v-model.trim="oUserList.phone"
               placeholder
               clearable
-              @keyup.enter.native="fGetUserList"
+              @keyup.enter.native="fSearchData"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="small" @click="fGetUserList">查询</el-button>
+            <el-button type="primary" size="small" @click="fSearchData">查询</el-button>
           </el-form-item>
         </el-form>
       </el-row>
@@ -55,6 +55,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        :current-page="pageNum"
         :page-sizes="[20, 30, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
@@ -222,7 +223,7 @@ export default {
   },
 
   mounted() {
-    this.initTable();
+    this.fSearchData();
   },
   watch: {
     allSelect(data) {
@@ -254,7 +255,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.addVisible = false;
-                _this.initTable();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -284,7 +285,7 @@ export default {
               if (response.data.success) {
                 window.master.fSuccessMes(response.data.msg);
                 _this.editVisible = false;
-                _this.initTable();
+                _this.fSearchData();
                 _this.$refs[formName].resetFields();
               } else {
                 window.master.fErrorMes(response.data.msg);
@@ -330,8 +331,9 @@ export default {
     },
 
     //初始化数据
-    initTable: function() {
+    fSearchData: function() {
       let _this = this;
+      _this.pageNum = 1;
       _this.fGetUserList();
     },
     //每页条数
@@ -408,7 +410,7 @@ export default {
                 .then(response => {
                   window.master.fLoadingClose();
                   if (response.data.success) {
-                    _this.initTable();
+                    _this.fSearchData();
                     window.master.fSuccessMes(response.data.msg);
                   } else {
                     window.master.fErrorMes(response.data.msg);
